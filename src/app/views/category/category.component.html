@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <h1>Category</h1>
+
+  <div class="menu-list">
+    <div class="row row-cols-md-5 g-2 g-lg-3 p-3">
+      <div class="col" *ngFor="let item of menus">
+        <app-card-menu
+          [icon]="item.icon"
+          [title]="item.title"
+          [desc]="item.description"
+          [redirectUri]="item.redirectUri" />
+      </div>
+    </div>
+  </div>
+</div>

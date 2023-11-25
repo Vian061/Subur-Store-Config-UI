@@ -1,0 +1,22 @@
+.grid-view {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+}
+
+.drawer {
+  background: crimson;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-content {
+  margin: 15px;
+}
+
+.drawer-size {
+  height: calc(100% - 20px);
+  width: 100%;
+}

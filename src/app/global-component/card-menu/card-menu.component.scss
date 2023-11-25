@@ -1,0 +1,47 @@
+@import "../../../styles.scss";
+
+.card {
+  height: 185px;
+  display: flex;
+  padding: 15px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 5px 6px 7px #88888828;
+}
+
+.material-symbols-outlined {
+  font-size: 30px;
+  cursor: default;
+}
+
+h3 {
+  padding-top: 5px;
+  margin-bottom: 10px;
+  cursor: default;
+  text-align: center;
+  line-height: 1;
+  font-size: 23px;
+}
+
+p {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+  color: grey;
+  line-height: 1.25;
+  margin: 0;
+  text-align: center;
+  flex: 2;
+}
+
+.card:hover {
+  background-color: $secondary-color;
+  color: white;
+}
+
+.card:hover p {
+  color: white;
+}
