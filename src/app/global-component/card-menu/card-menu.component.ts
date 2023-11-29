@@ -18,7 +18,6 @@ export class CardMenuComponent {
   @Input() redirectUri: string = "/";
 
   redirectToPage() {
-    console.log(this.redirectUri);
     this.router.navigate([this.redirectUri]);
   }
 }

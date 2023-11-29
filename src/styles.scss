@@ -3,6 +3,7 @@
 $primary-color: crimson;
 $secondary-color: rgb(255, 141, 141);
 $background-color: rgb(239 239 239);
+$scroll-bar-width: 8px;
 
 body {
   margin: 0;
@@ -12,4 +13,24 @@ body {
 
 h1 {
   font-family: "Quicksand", sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: $scroll-bar-width; /* Width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent; /* Color of the track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888888; /* Color of the scrollbar handle */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555555; /* Color of the scrollbar handle on hover */
 }

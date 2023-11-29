@@ -1,4 +1,10 @@
 <div class="container-fluid">
   <h1>Area</h1>
-  <p>area works!</p>
+
+  <p>Area data from Subur Database</p>
+  <app-table
+    [columnHeaders]="column"
+    [data]="data"
+    [useCheckBox]="true"
+    (onSingleChecked)="onCheckedChange($event)" />
 </div>
