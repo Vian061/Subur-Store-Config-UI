@@ -16,7 +16,10 @@
     <tbody class="scrollable-body">
       <tr *ngFor="let item of displayedData">
         <td class="check-box" *ngIf="useCheckBox">
-          <input type="checkbox" Z (change)="onSingleCheckedEvent(item)" />
+          <input
+            type="checkbox"
+            (change)="onSingleCheckedEvent(item)"
+            [checked]="isSingleChecked(item)" />
         </td>
         <td *ngFor="let header of columnHeaders" [style.width]="header.width">
           {{ item[header.title] }}
@@ -44,7 +47,7 @@
     </div>
 
     <div class="ms-3 page-range d-flex align-items-center">
-      <div class="page-number p-3">
+      <div class="page-number">
         {{ itemStart + 1 }} - {{ itemEnd >= data.length ? data.length : itemEnd }} of
         {{ data.length }}
       </div>

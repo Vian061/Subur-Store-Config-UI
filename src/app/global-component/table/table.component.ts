@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { AreaModel } from "../../models/area-model";
 import { TableColumnHeader } from "../../models/ui-models/table-column-header";
+import _isEqual from "lodash/isEqual";
 
 @Component({
   selector: "app-table",
@@ -23,8 +23,18 @@ export class TableComponent {
   @Output() onAllChecked: EventEmitter<any> = new EventEmitter<any>();
   @Output() onSingleChecked: EventEmitter<any> = new EventEmitter<any>();
 
-  checkedData: any[] = [];
   displayedData: any[] = [];
+
+  private _selectedData: any[] = [];
+  @Output() selectedDataChange: EventEmitter<any[]> = new EventEmitter<any>();
+  @Input()
+  get selectedData(): any[] {
+    return this._selectedData;
+  }
+  set selectedData(value: any[]) {
+    this._selectedData = value;
+    this.selectedDataChange.emit(this._selectedData);
+  }
 
   ngOnInit() {
     this.itemEnd = this.pageSize;
@@ -37,9 +47,31 @@ export class TableComponent {
 
   checkAllCheckBox(event: any) {
     this.isAllChecked = !this.isAllChecked;
+
+    if (this.isAllChecked) {
+      this.data.forEach((item) => {
+        var response = this._selectedData.some((_) => _isEqual(_, item));
+        if (!response) this._selectedData.push(item);
+      });
+    } else {
+      this._selectedData = [];
+    }
+
     this.onAllChecked.emit(event);
   }
+
+  isSingleChecked(event: any) {
+    return this._selectedData.some((_) => _isEqual(_, event));
+  }
+
   onSingleCheckedEvent(event: any) {
+    var response = this._selectedData.some((_) => _isEqual(_, event));
+    if (response) {
+      this._selectedData.splice(event, 1);
+    } else {
+      this._selectedData.push(event);
+    }
+
     this.onSingleChecked.emit(event);
   }
 

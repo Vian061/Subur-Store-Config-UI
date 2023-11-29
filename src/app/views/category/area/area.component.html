@@ -5,6 +5,7 @@
   <app-table
     [columnHeaders]="column"
     [data]="data"
-    [useCheckBox]="true"
-    (onSingleChecked)="onCheckedChange($event)" />
+    [useCheckBox]="false"
+    (onSingleChecked)="onCheckedChange($event)"
+    [(selectedData)]="selectedData" />
 </div>

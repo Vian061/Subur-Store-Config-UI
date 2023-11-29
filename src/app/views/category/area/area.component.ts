@@ -29,8 +29,9 @@ export class AreaComponent {
     { code: "bwi", description: "Bali" },
     { code: "jmb", description: "Jambi" },
   ];
+  selectedData: AreaModel[] = [];
 
   onCheckedChange(value: AreaModel) {
-    console.log(value);
+    // console.log(value);
   }
 }

@@ -1,5 +1,9 @@
 @import "../../../styles.scss";
 
+table {
+  margin: 0;
+}
+
 table tbody {
   display: block;
   max-height: 205px;
@@ -25,7 +29,7 @@ table thead {
 #page-size {
   border: none;
   border-bottom: 1px solid grey;
-  // padding-left: 3px;
+  font-size: 15px;
 }
 
 #page-size:focus-visible {
@@ -52,4 +56,20 @@ table thead {
 
 .card {
   box-shadow: 5px 6px 7px #88888828;
+}
+
+.page-number {
+  padding: 18px;
+  font-size: 14px;
+}
+
+@media only screen and (max-width: 768px) {
+  .paginator {
+    flex-direction: column-reverse;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .page-number {
+    padding: 0;
+  }
 }
