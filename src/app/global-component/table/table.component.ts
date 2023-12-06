@@ -2,16 +2,22 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { TableColumnHeader } from "../../models/ui-models/table-column-header";
 import _isEqual from "lodash/isEqual";
+import { DropDownComponent } from "../drop-down/drop-down.component";
+import { DropDownMenu } from "../../models/ui-models/drop-down-menu";
 
 @Component({
   selector: "app-table",
   standalone: true,
-  imports: [CommonModule],
   templateUrl: "./table.component.html",
   styleUrl: "./table.component.scss",
+  imports: [CommonModule, DropDownComponent],
 })
 export class TableComponent {
-  pageSizeList: number[] = [5, 10, 15, 20];
+  pageSizeList: DropDownMenu[] = [
+    { key: "5", value: "5" },
+    { key: "10", value: "10" },
+    { key: "15", value: "15" },
+  ];
   itemStart: number = 0;
   itemEnd: number = 0;
   pageSize: number = 5;
@@ -75,8 +81,8 @@ export class TableComponent {
     this.onSingleChecked.emit(event);
   }
 
-  onPageSizeChange(event: Event) {
-    this.pageSize = parseInt((event.target as HTMLSelectElement).value);
+  onPageSizeChange(event: DropDownMenu) {
+    this.pageSize = parseInt(event.value);
     this.itemStart = 0;
     this.itemEnd = this.pageSize;
     this.displayedData = this.data.slice(0, this.pageSize);

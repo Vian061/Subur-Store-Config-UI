@@ -12,13 +12,13 @@ export class Constants {
       icon: "account_balance",
       title: "Bank",
       description: "Sync Bank Configuration to a branch",
-      redirectUri: "/Area",
+      redirectUri: "/Bank",
     },
     {
       icon: "call_split",
       title: "Branch",
       description: "Sync Branch Configuration to a branch",
-      redirectUri: "/Area",
+      redirectUri: "/Branch",
     },
     {
       icon: "handshake",

@@ -26,6 +26,11 @@ table thead {
   width: 30px;
 }
 
+.page-size-container {
+  display: flex;
+  align-items: center;
+}
+
 #page-size {
   border: none;
   border-bottom: 1px solid grey;

@@ -33,3 +33,20 @@ table tbody tr {
 table thead {
   width: calc(100% - $scroll-bar-width);
 }
+
+@media only screen and (max-width: 768px) {
+  .branch-container {
+    flex-direction: column !important;
+  }
+  .branch {
+    padding-top: 10px;
+    margin: 0;
+  }
+
+  .btn {
+    padding: 10px;
+    margin: 0 !important;
+    margin-top: 10px !important;
+    width: 100%;
+  }
+}
