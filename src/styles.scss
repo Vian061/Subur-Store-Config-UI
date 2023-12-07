@@ -11,6 +11,15 @@ body {
   font-family: "Quicksand", sans-serif;
 }
 
+.container-fluid {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 95vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 h1 {
   font-family: "Quicksand", sans-serif;
 }

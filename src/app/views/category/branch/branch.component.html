@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <h1>Branch</h1>
+
+  <p>Branch data from Subur Database</p>
+  <div class="d-flex flex-row align-items-center mb-3 branch-container">
+    <div class="d-flex flex-row align-items-center branch">
+      <label>From Branch : </label>
+      <app-drop-down
+        class="ms-3"
+        (selectedValueChange)="onBranchChange($event)"
+        [dropDownList]="branchList" />
+    </div>
+
+    <div class="d-flex flex-row align-items-center ms-3 branch">
+      <label>To Branch : </label>
+      <app-drop-down
+        class="ms-3"
+        (selectedValueChange)="onDestinationBranchChange($event)"
+        [dropDownList]="branchList" />
+    </div>
+
+    <button type="button" class="btn btn-success ms-3 px-4">Sync</button>
+  </div>
+  <app-table
+    [columnHeaders]="column"
+    [useCheckBox]="false"
+    (onSingleChecked)="onCheckedChange($event)"
+    [data]="data"
+    [(selectedData)]="selectedData" />
+</div>

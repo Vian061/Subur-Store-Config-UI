@@ -28,7 +28,12 @@
             {{ item[header.property] }}
           </div>
           <ng-template #elseBlock>
-            <img src="{{ item[header.property] }}" class="img" />
+            <img
+              src="{{ item[header.property] }}"
+              class="img"
+              loading="eager"
+              alt="img"
+              decoding="async" />
           </ng-template>
         </td>
       </tr>
@@ -37,7 +42,7 @@
 
   <div class="paginator d-flex align-items-center justify-content-between mx-4">
     <div class="page-size-container">
-      <label for="page-size">Data per page:</label>
+      <label>Data per page:</label>
       <app-drop-down
         class="ms-3"
         (selectedValueChange)="onPageSizeChange($event)"
