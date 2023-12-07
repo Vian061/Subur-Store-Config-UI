@@ -56,29 +56,32 @@ export class TableComponent {
 
     if (this.isAllChecked) {
       this.data.forEach((item) => {
-        var response = this._selectedData.some((_) => _isEqual(_, item));
-        if (!response) this._selectedData.push(item);
+        var response = this.selectedData.some((_) => _isEqual(_, item));
+        if (!response) this.selectedData.push(item);
       });
     } else {
-      this._selectedData = [];
+      this.selectedData = [];
     }
 
     this.onAllChecked.emit(event);
   }
 
   isSingleChecked(event: any) {
-    return this._selectedData.some((_) => _isEqual(_, event));
+    return this.selectedData.some((_) => _isEqual(_, event));
   }
 
   onSingleCheckedEvent(event: any) {
-    var response = this._selectedData.some((_) => _isEqual(_, event));
-    if (response) {
-      this._selectedData.splice(event, 1);
-    } else {
-      this._selectedData.push(event);
-    }
+    if (this.useCheckBox) {
+      var response = this.selectedData.some((_) => _isEqual(_, event));
+      if (response) {
+        this.selectedData.splice(this.selectedData.indexOf(event), 1);
+      } else {
+        this.selectedData.push(event);
+      }
 
-    this.onSingleChecked.emit(event);
+      console.log(this.selectedData);
+      this.onSingleChecked.emit(event);
+    }
   }
 
   onPageSizeChange(event: DropDownMenu) {

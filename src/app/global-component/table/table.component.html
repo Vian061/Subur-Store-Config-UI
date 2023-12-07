@@ -4,6 +4,7 @@
       <tr>
         <th class="check-box" *ngIf="useCheckBox">
           <input
+            class="form-check-input"
             type="checkbox"
             [checked]="isAllCheckBoxChecked()"
             (change)="checkAllCheckBox($event)" />
@@ -14,9 +15,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of displayedData">
+      <tr *ngFor="let item of displayedData" (click)="onSingleCheckedEvent(item)">
         <td class="check-box" *ngIf="useCheckBox">
           <input
+            class="form-check-input"
             type="checkbox"
             (change)="onSingleCheckedEvent(item)"
             [checked]="isSingleChecked(item)" />
