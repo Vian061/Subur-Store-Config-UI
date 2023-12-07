@@ -22,6 +22,12 @@ table thead {
   width: calc(100% - $scroll-bar-width);
 }
 
+td,
+th {
+  vertical-align: middle;
+  text-align: center;
+}
+
 .check-box {
   width: 30px;
 }

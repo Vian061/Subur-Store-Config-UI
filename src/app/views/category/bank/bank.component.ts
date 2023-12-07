@@ -45,9 +45,9 @@ export class BankComponent {
       journalAccountName: "Someone",
     },
     {
-      accountName: "A-0001",
-      accountNo: "0001",
-      bankName: "BCA",
+      accountName: "A-0002",
+      accountNo: "0002",
+      bankName: "BNI",
       imageData: "",
       imageName: "",
       imageUrl:
