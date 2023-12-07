@@ -34,3 +34,12 @@ h1 {
 ::-webkit-scrollbar-thumb:hover {
   background: #555555; /* Color of the scrollbar handle on hover */
 }
+
+.container-fluid {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 95vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

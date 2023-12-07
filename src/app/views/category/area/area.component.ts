@@ -17,8 +17,8 @@ import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
 export class AreaComponent {
   columnHeaders: string[] = ["code", "description"];
   column: TableColumnHeader[] = [
-    { title: "code", width: "100px" },
-    { title: "description", width: "max-content" },
+    { title: "Code", property: "code", width: "100px" },
+    { title: "Description", property: "description", width: "max-content" },
   ];
   data: AreaModel[] = [
     { code: "bgr", description: "Bogor" },

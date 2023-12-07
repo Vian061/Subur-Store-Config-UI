@@ -22,7 +22,12 @@
             [checked]="isSingleChecked(item)" />
         </td>
         <td *ngFor="let header of columnHeaders" [style.width]="header.width">
-          {{ item[header.title] }}
+          <div *ngIf="header.type != 'img'; else elseBlock">
+            {{ item[header.property] }}
+          </div>
+          <ng-template #elseBlock>
+            <img src="{{ item[header.property] }}" class="img" />
+          </ng-template>
         </td>
       </tr>
     </tbody>
