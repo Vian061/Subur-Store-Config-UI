@@ -29,7 +29,10 @@ export class BusinessPartnerComponent {
     { title: "Balance", property: "balance", width: "70px" },
     { title: "Point Reward", property: "pointReward", width: "70px" },
     { title: "PIC", property: "pIC", width: "70px" },
-    { title: "Area", property: "area", width: "70px" },
+    { title: "Area", property: "area", subProperty: "description", width: "70px" },
+    { title: "Group", property: "bPGroup", subProperty: "description", width: "70px" },
+    { title: "Credit Limit", property: "creditLimit", width: "70px" },
+    { title: "Tax Count", property: "isTaxCount", width: "70px" },
   ];
 
   data: BusinessPartnerModel[] = [
@@ -69,7 +72,7 @@ export class BusinessPartnerComponent {
       bPGroup: {
         code: "GRP001",
         description: "Sample Group",
-        groupTyper: "Type A",
+        groupType: "Type A",
       },
       creditLimit: 10000,
       isTaxCount: true,

@@ -25,7 +25,12 @@
         </td>
         <td *ngFor="let header of columnHeaders" [style.width]="header.width">
           <div *ngIf="header.type != 'img'; else elseBlock">
-            {{ item[header.property] }}
+            <div *ngIf="header.subProperty == null; else elseBlock">
+              {{ item[header.property] }}
+            </div>
+            <ng-template #elseBlock>
+              {{ item[header.property][header.subProperty!] }}
+            </ng-template>
           </div>
           <ng-template #elseBlock>
             <img
