@@ -24,7 +24,7 @@ export class Constants {
       icon: "handshake",
       title: "Business Partner",
       description: "Sync Business Partner Configuration to a branch",
-      redirectUri: "/Area",
+      redirectUri: "/BusinessPartner",
     },
     {
       icon: "person",

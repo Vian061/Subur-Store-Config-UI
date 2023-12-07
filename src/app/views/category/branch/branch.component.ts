@@ -24,9 +24,27 @@ export class BranchComponent {
   branchDestination: DropDownMenu = this.branchList[0];
 
   column: TableColumnHeader[] = [
-    { title: "Code", property: "code", width: "max-content" },
+    { title: "Code", property: "code", width: "70px" },
     { title: "Description", property: "description", width: "max-content" },
     { title: "Latitude", property: "latitude", width: "max-content" },
+    { title: "Longitude", property: "longitude", width: "max-content" },
+    { title: "Accuracy", property: "accuracy", width: "max-content" },
+    { title: "Point Rokok", property: "nominalPerPointRokok", width: "max-content" },
+    {
+      title: "Point Rokok Credit",
+      property: "nominalPerPointRokokCredit",
+      width: "max-content",
+    },
+    {
+      title: "Multiply Point Full Payment Rokok",
+      property: "multiplyPointFullPaymentRokok",
+      width: "max-content",
+    },
+    {
+      title: "Non Rokok For Notification",
+      property: "minimalAmountNonRokokForNotification",
+      width: "max-content",
+    },
     { title: "Branch Image", property: "imageUrl", type: "img", width: "max-content" },
   ];
   data: BranchModel[] = [
