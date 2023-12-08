@@ -36,7 +36,7 @@ export class Constants {
       icon: "ballot",
       title: "Item Group",
       description: "Sync Item Group Configuration to a branch",
-      redirectUri: "/Area",
+      redirectUri: "/Item-Group",
     },
     {
       icon: "book_5",
