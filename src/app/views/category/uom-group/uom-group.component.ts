@@ -1,10 +1,10 @@
 import { Component, ViewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { BranchModel } from "../../../models/branch-model";
+import { UoMGroupModel } from "../../../models/uom-group-model";
 import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
-import { SelectionModel } from "@angular/cdk/collections";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { SelectionModel } from "@angular/cdk/collections";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -13,10 +13,8 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule } from "@angular/forms";
 
 @Component({
-  selector: "app-branch",
+  selector: "app-uom-group",
   standalone: true,
-  templateUrl: "./branch.component.html",
-  styleUrl: "./branch.component.scss",
   imports: [
     CommonModule,
     MatTableModule,
@@ -28,8 +26,10 @@ import { FormsModule } from "@angular/forms";
     MatSlideToggleModule,
     FormsModule,
   ],
+  templateUrl: "./uom-group.component.html",
+  styleUrl: "./uom-group.component.scss",
 })
-export class BranchComponent {
+export class UomGroupComponent {
   useCheckbox: boolean = false;
   branchList: DropDownMenu[] = [
     { key: "cfr", value: "Cifor" },
@@ -40,22 +40,9 @@ export class BranchComponent {
   selectedBranch?: DropDownMenu;
   branchDestination?: DropDownMenu;
 
-  displayedColumns: string[] = [
-    "code",
-    "description",
-    "latitude",
-    "longitude",
-    "accuracy",
-    "nominalPerPointRokok",
-    "nominalPerPointRokokCredit",
-    "multiplyPointFullPaymentRokok",
-    "nominalPerPointNonRokok",
-    "nominalPerPointNonRokokCredit",
-    "multiplyPointFullPaymentNonRokok",
-    "minimalAmountNonRokokForNotification",
-  ];
-  dataSource = new MatTableDataSource<BranchModel>(DATA);
-  selectedData = new SelectionModel<BranchModel>(true, []);
+  displayedColumns: string[] = ["code", "description", "details"];
+  dataSource = new MatTableDataSource<UoMGroupModel>(DATA);
+  selectedData = new SelectionModel<UoMGroupModel>(true, []);
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
@@ -90,37 +77,28 @@ export class BranchComponent {
   }
 }
 
-const DATA: BranchModel[] = [
+const DATA: UoMGroupModel[] = [
   {
-    code: "001",
-    description: "Branch 1",
-    latitude: 123.456,
-    longitude: 789.012,
-    accuracy: 0.95,
-    imageUrl:
-      "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    nominalPerPointRokok: 10,
-    nominalPerPointRokokCredit: 8,
-    multiplyPointFullPaymentRokok: 2,
-    nominalPerPointNonRokok: 5,
-    nominalPerPointNonRokokCredit: 4,
-    multiplyPointFullPaymentNonRokok: 3,
-    minimalAmountNonRokokForNotification: 20,
-  },
-  {
-    code: "002",
-    description: "Branch 2",
-    latitude: 234.567,
-    longitude: 890.123,
-    accuracy: 0.92,
-    imageUrl:
-      "https://images.unsplash.com/photo-1701890739231-6c00f071a706?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    nominalPerPointRokok: 12,
-    nominalPerPointRokokCredit: 9,
-    multiplyPointFullPaymentRokok: 3,
-    nominalPerPointNonRokok: 6,
-    nominalPerPointNonRokokCredit: 5,
-    multiplyPointFullPaymentNonRokok: 4,
-    minimalAmountNonRokokForNotification: 25,
+    code: "ABC",
+    description: "Example UoM Group",
+    details: [
+      {
+        alternateUoMModel: {
+          code: "UOM002",
+          description: "Sample Unit of Measure 2",
+          sortBy: 2,
+          isPutExtraFlagInReport: true,
+        },
+        alternateQuantity: 5,
+        baseUoMModel: {
+          code: "UOM001",
+          description: "Sample Unit of Measure 1",
+          sortBy: 1,
+          isPutExtraFlagInReport: true,
+        },
+        baseQuantity: 1,
+        uoMPackage: "Example Package",
+      },
+    ],
   },
 ];

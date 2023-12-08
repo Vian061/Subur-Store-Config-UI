@@ -1,7 +1,7 @@
 <div class="container-fluid">
-  <h1>Area</h1>
+  <h1>UoM</h1>
 
-  <p>Area data from Subur Database</p>
+  <p>Unit of Measure Data from Subur Database</p>
 
   <div class="d-flex flex-row align-items-center">
     <mat-form-field>
@@ -51,16 +51,24 @@
         </td>
       </ng-container>
 
-      <!-- Code Column -->
       <ng-container matColumnDef="code">
         <th mat-header-cell *matHeaderCellDef>Code</th>
         <td mat-cell *matCellDef="let element">{{ element.code }}</td>
       </ng-container>
 
-      <!-- Name Column -->
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>Description</th>
         <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="sortBy">
+        <th mat-header-cell *matHeaderCellDef>Sort By</th>
+        <td mat-cell *matCellDef="let element">{{ element.sortBy }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="isPutExtraFlagInReport">
+        <th mat-header-cell *matHeaderCellDef>Put Extra Flag In Report</th>
+        <td mat-cell *matCellDef="let element">{{ element.isPutExtraFlagInReport }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

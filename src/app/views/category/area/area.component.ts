@@ -9,6 +9,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-area",
@@ -23,17 +25,20 @@ import { MatButtonModule } from "@angular/material/button";
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
+    MatSlideToggleModule,
+    FormsModule,
   ],
 })
 export class AreaComponent {
+  useCheckbox: boolean = false;
   branchList: DropDownMenu[] = [
     { key: "cfr", value: "Cifor" },
     { key: "cld", value: "Cilendek" },
     { key: "ats", value: "Toko Atas" },
   ];
 
-  selectedBranch: DropDownMenu = this.branchList[0];
-  branchDestination: DropDownMenu = this.branchList[0];
+  selectedBranch?: DropDownMenu;
+  branchDestination?: DropDownMenu;
 
   displayedColumns: string[] = ["code", "description"];
   dataSource = new MatTableDataSource<AreaModel>(DATA);
@@ -43,6 +48,15 @@ export class AreaComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    if (this.useCheckbox) this.displayedColumns.unshift("select");
+  }
+
+  onSlideChange() {
+    if (this.useCheckbox) {
+      this.displayedColumns.unshift("select");
+    } else {
+      this.displayedColumns.splice(0, 1);
+    }
   }
 
   isAllSelected() {

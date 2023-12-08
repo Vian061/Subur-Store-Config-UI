@@ -1,22 +1,20 @@
 import { Component, ViewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { BranchModel } from "../../../models/branch-model";
 import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
-import { SelectionModel } from "@angular/cdk/collections";
 import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { SelectionModel } from "@angular/cdk/collections";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule } from "@angular/forms";
+import { MenuModel } from "../../../models/menu-model";
 
 @Component({
-  selector: "app-branch",
+  selector: "app-menu",
   standalone: true,
-  templateUrl: "./branch.component.html",
-  styleUrl: "./branch.component.scss",
   imports: [
     CommonModule,
     MatTableModule,
@@ -28,8 +26,10 @@ import { FormsModule } from "@angular/forms";
     MatSlideToggleModule,
     FormsModule,
   ],
+  templateUrl: "./menu.component.html",
+  styleUrl: "./menu.component.scss",
 })
-export class BranchComponent {
+export class MenuComponent {
   useCheckbox: boolean = false;
   branchList: DropDownMenu[] = [
     { key: "cfr", value: "Cifor" },
@@ -43,19 +43,14 @@ export class BranchComponent {
   displayedColumns: string[] = [
     "code",
     "description",
-    "latitude",
-    "longitude",
-    "accuracy",
-    "nominalPerPointRokok",
-    "nominalPerPointRokokCredit",
-    "multiplyPointFullPaymentRokok",
-    "nominalPerPointNonRokok",
-    "nominalPerPointNonRokokCredit",
-    "multiplyPointFullPaymentNonRokok",
-    "minimalAmountNonRokokForNotification",
+    "menuOrder",
+    "isActive",
+    "formName",
+    "formCaption",
+    "branch",
   ];
-  dataSource = new MatTableDataSource<BranchModel>(DATA);
-  selectedData = new SelectionModel<BranchModel>(true, []);
+  dataSource = new MatTableDataSource<MenuModel>(DATA);
+  selectedData = new SelectionModel<MenuModel>(true, []);
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
@@ -90,37 +85,29 @@ export class BranchComponent {
   }
 }
 
-const DATA: BranchModel[] = [
+const DATA: MenuModel[] = [
   {
-    code: "001",
-    description: "Branch 1",
-    latitude: 123.456,
-    longitude: 789.012,
-    accuracy: 0.95,
-    imageUrl:
-      "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    nominalPerPointRokok: 10,
-    nominalPerPointRokokCredit: 8,
-    multiplyPointFullPaymentRokok: 2,
-    nominalPerPointNonRokok: 5,
-    nominalPerPointNonRokokCredit: 4,
-    multiplyPointFullPaymentNonRokok: 3,
-    minimalAmountNonRokokForNotification: 20,
-  },
-  {
-    code: "002",
-    description: "Branch 2",
-    latitude: 234.567,
-    longitude: 890.123,
-    accuracy: 0.92,
-    imageUrl:
-      "https://images.unsplash.com/photo-1701890739231-6c00f071a706?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    nominalPerPointRokok: 12,
-    nominalPerPointRokokCredit: 9,
-    multiplyPointFullPaymentRokok: 3,
-    nominalPerPointNonRokok: 6,
-    nominalPerPointNonRokokCredit: 5,
-    multiplyPointFullPaymentNonRokok: 4,
-    minimalAmountNonRokokForNotification: 25,
+    code: "M001",
+    description: "Menu 1",
+    menuOrder: 1,
+    isActive: true,
+    formName: "Form1",
+    formCaption: "Form 1 Caption",
+    branch: {
+      code: "001",
+      description: "Branch 1",
+      latitude: 123.456,
+      longitude: 789.012,
+      accuracy: 0.95,
+      imageUrl:
+        "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      nominalPerPointRokok: 10,
+      nominalPerPointRokokCredit: 8,
+      multiplyPointFullPaymentRokok: 2,
+      nominalPerPointNonRokok: 5,
+      nominalPerPointNonRokokCredit: 4,
+      multiplyPointFullPaymentNonRokok: 3,
+      minimalAmountNonRokokForNotification: 20,
+    },
   },
 ];

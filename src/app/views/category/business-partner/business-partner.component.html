@@ -15,17 +15,26 @@
     </mat-form-field>
     <mat-form-field class="ms-3">
       <mat-label>Destination Branch</mat-label>
-      <mat-select [(value)]="selectedBranch">
+      <mat-select [(value)]="branchDestination">
         <mat-option>None</mat-option>
         <mat-option value="option1">Option 1</mat-option>
         <mat-option value="option2">Option 2</mat-option>
         <mat-option value="option3">Option 3</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button color="primary" style="margin-bottom: 22px" class="ms-3">
+    <button
+      mat-raised-button
+      color="primary"
+      style="margin-bottom: 22px"
+      class="ms-3"
+      [disabled]="selectedBranch == null || branchDestination == null">
       Submit
     </button>
   </div>
+
+  <mat-slide-toggle class="mb-4" [(ngModel)]="useCheckbox" (change)="onSlideChange()"
+    >Use Checkbox ?</mat-slide-toggle
+  >
 
   <div class="mat-elevation-z3">
     <table mat-table [dataSource]="dataSource">

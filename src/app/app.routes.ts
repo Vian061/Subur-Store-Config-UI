@@ -7,6 +7,16 @@ import { BranchComponent } from "./views/category/branch/branch.component";
 import { BusinessPartnerComponent } from "./views/category/business-partner/business-partner.component";
 import { CustomerComponent } from "./views/category/customer/customer.component";
 import { ItemGroupComponent } from "./views/category/item-group/item-group.component";
+import { JournalAccountComponent } from "./views/category/journal-account/journal-account.component";
+import { ManufacturerComponent } from "./views/category/manufacturer/manufacturer.component";
+import { MenuComponent } from "./views/category/menu/menu.component";
+import { PriceComponent } from "./views/category/price/price.component";
+import { ProductComponent } from "./views/category/product/product.component";
+import { RoleComponent } from "./views/category/role/role.component";
+import { UomComponent } from "./views/category/uom/uom.component";
+import { UomGroupComponent } from "./views/category/uom-group/uom-group.component";
+import { WarehouseComponent } from "./views/category/warehouse/warehouse.component";
+import { WarehouseBinComponent } from "./views/category/warehouse-bin/warehouse-bin.component";
 
 export const routes: Routes = [
   { path: "", component: DashboardComponent },
@@ -17,4 +27,14 @@ export const routes: Routes = [
   { path: "BusinessPartner", component: BusinessPartnerComponent },
   { path: "Customer", component: CustomerComponent },
   { path: "Item-Group", component: ItemGroupComponent },
+  { path: "Journal-Account", component: JournalAccountComponent },
+  { path: "Manufacturer", component: ManufacturerComponent },
+  { path: "Menu", component: MenuComponent },
+  { path: "Price", component: PriceComponent },
+  { path: "Product", component: ProductComponent },
+  { path: "Role", component: RoleComponent },
+  { path: "UoM", component: UomComponent },
+  { path: "UoM-Group", component: UomGroupComponent },
+  { path: "Warehouse", component: WarehouseComponent },
+  { path: "Warehouse-Bin", component: WarehouseBinComponent },
 ];

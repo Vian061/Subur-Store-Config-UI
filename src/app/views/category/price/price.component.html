@@ -1,7 +1,7 @@
 <div class="container-fluid">
-  <h1>Area</h1>
+  <h1>Manufacturer</h1>
 
-  <p>Area data from Subur Database</p>
+  <p>Manufacturer Data from Subur Database</p>
 
   <div class="d-flex flex-row align-items-center">
     <mat-form-field>
@@ -51,16 +51,44 @@
         </td>
       </ng-container>
 
-      <!-- Code Column -->
-      <ng-container matColumnDef="code">
-        <th mat-header-cell *matHeaderCellDef>Code</th>
-        <td mat-cell *matCellDef="let element">{{ element.code }}</td>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
       </ng-container>
 
-      <!-- Name Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+      <ng-container matColumnDef="averagePrice">
+        <th mat-header-cell *matHeaderCellDef>Average Price</th>
+        <td mat-cell *matCellDef="let element">{{ element.averagePrice }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="customPrice">
+        <th mat-header-cell *matHeaderCellDef>Custom Price</th>
+        <td mat-cell *matCellDef="let element">{{ element.customPrice }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="validFrom">
+        <th mat-header-cell *matHeaderCellDef>Valid From</th>
+        <td mat-cell *matCellDef="let element">{{ element.validFrom | date : "dd MMMM yyyy" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="validTo">
+        <th mat-header-cell *matHeaderCellDef>Valid To</th>
+        <td mat-cell *matCellDef="let element">{{ element.validTo | date : "dd MMMM yyyy" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="proudct">
+        <th mat-header-cell *matHeaderCellDef>Proudct</th>
+        <td mat-cell *matCellDef="let element">{{ element.proudct.brand }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef>Active</th>
+        <td mat-cell *matCellDef="let element">{{ element.isActive }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="details">
+        <th mat-header-cell *matHeaderCellDef>Details</th>
+        <td mat-cell *matCellDef="let element">{{ element.details.length }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

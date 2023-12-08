@@ -9,6 +9,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
 import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
 import { CustomerModel } from "../../../models/customer-model";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-customer",
@@ -21,19 +23,22 @@ import { CustomerModel } from "../../../models/customer-model";
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
+    MatSlideToggleModule,
+    FormsModule,
   ],
   templateUrl: "./customer.component.html",
   styleUrl: "./customer.component.scss",
 })
 export class CustomerComponent {
+  useCheckbox: boolean = false;
   branchList: DropDownMenu[] = [
     { key: "cfr", value: "Cifor" },
     { key: "cld", value: "Cilendek" },
     { key: "ats", value: "Toko Atas" },
   ];
 
-  selectedBranch: DropDownMenu = this.branchList[0];
-  branchDestination: DropDownMenu = this.branchList[0];
+  selectedBranch?: DropDownMenu;
+  branchDestination?: DropDownMenu;
 
   displayedColumns: string[] = [
     "code",
@@ -58,6 +63,15 @@ export class CustomerComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    if (this.useCheckbox) this.displayedColumns.unshift("select");
+  }
+
+  onSlideChange() {
+    if (this.useCheckbox) {
+      this.displayedColumns.unshift("select");
+    } else {
+      this.displayedColumns.splice(0, 1);
+    }
   }
 
   isAllSelected() {

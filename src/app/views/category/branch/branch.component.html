@@ -18,15 +18,24 @@
         <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button color="primary" style="margin-bottom: 22px" class="ms-3">
+    <button
+      mat-raised-button
+      color="primary"
+      style="margin-bottom: 22px"
+      class="ms-3"
+      [disabled]="selectedBranch == null || branchDestination == null">
       Submit
     </button>
   </div>
 
+  <mat-slide-toggle class="mb-4" [(ngModel)]="useCheckbox" (change)="onSlideChange()"
+    >Use Checkbox ?</mat-slide-toggle
+  >
+
   <div class="mat-elevation-z3">
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
+        <th mat-header-cell *matHeaderCellDef style="width: 50px">
           <mat-checkbox
             (change)="$event ? toggleAllRows() : null"
             [checked]="selectedData.hasValue() && isAllSelected()"

@@ -8,6 +8,9 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
+import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: "app-business-partner",
@@ -22,19 +25,39 @@ import { MatButtonModule } from "@angular/material/button";
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
+    MatSlideToggleModule,
+    FormsModule,
   ],
 })
 export class BusinessPartnerComponent implements AfterViewInit {
-  displayedColumns: string[] = ["select", "code", "name", "balance", "pointReward"];
+  useCheckbox: boolean = false;
+  branchList: DropDownMenu[] = [
+    { key: "cfr", value: "Cifor" },
+    { key: "cld", value: "Cilendek" },
+    { key: "ats", value: "Toko Atas" },
+  ];
+
+  selectedBranch?: DropDownMenu;
+  branchDestination?: DropDownMenu;
+
+  displayedColumns: string[] = ["code", "name", "balance", "pointReward"];
   dataSource = new MatTableDataSource<BusinessPartnerModel>(ELEMENT_DATA);
 
   selectedData = new SelectionModel<BusinessPartnerModel>(true, []);
-  selectedBranch = "";
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    if (this.useCheckbox) this.displayedColumns.unshift("select");
+  }
+
+  onSlideChange() {
+    if (this.useCheckbox) {
+      this.displayedColumns.unshift("select");
+    } else {
+      this.displayedColumns.splice(0, 1);
+    }
   }
 
   isAllSelected() {
