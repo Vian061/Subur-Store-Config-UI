@@ -13,5 +13,5 @@ export interface CustomerModel extends BusinessPartnerGroupModel {
   deliveryDays: string;
   feesRokok: number;
   feesNonRokok: number;
-  salesmaNIK: string;
+  salesmanNIK: string;
 }

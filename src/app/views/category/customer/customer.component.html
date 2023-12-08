@@ -1,7 +1,7 @@
 <div class="container-fluid">
-  <h1>Branch</h1>
+  <h1>Business Partner</h1>
 
-  <p>Branch data from Subur Database</p>
+  <p>Area data from Subur Database</p>
 
   <div class="d-flex flex-row align-items-center">
     <mat-form-field>
@@ -50,62 +50,68 @@
 
       <!-- Name Column -->
       <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef style="min-width: 100px">Name</th>
+        <th mat-header-cell *matHeaderCellDef>Description</th>
         <td mat-cell *matCellDef="let element">{{ element.description }}</td>
       </ng-container>
 
-      <!-- Balance Column -->
-      <ng-container matColumnDef="latitude">
-        <th mat-header-cell *matHeaderCellDef>Latitude</th>
-        <td mat-cell *matCellDef="let element">{{ element.latitude }}</td>
+      <ng-container matColumnDef="groupType">
+        <th mat-header-cell *matHeaderCellDef>Group Type</th>
+        <td mat-cell *matCellDef="let element">{{ element.groupType }}</td>
       </ng-container>
 
-      <!-- Point Reward Column -->
-      <ng-container matColumnDef="longitude">
-        <th mat-header-cell *matHeaderCellDef>Longitude</th>
-        <td mat-cell *matCellDef="let element">{{ element.longitude }}</td>
+      <ng-container matColumnDef="emailAddress">
+        <th mat-header-cell *matHeaderCellDef>Email Address</th>
+        <td mat-cell *matCellDef="let element">{{ element.emailAddress }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="accuracy">
-        <th mat-header-cell *matHeaderCellDef>Accuracy</th>
-        <td mat-cell *matCellDef="let element">{{ element.accuracy }}</td>
+      <ng-container matColumnDef="outstandingBills">
+        <th mat-header-cell *matHeaderCellDef>Outstanding Bills</th>
+        <td mat-cell *matCellDef="let element">{{ element.outstandingBills }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="nominalPerPointRokok">
-        <th mat-header-cell *matHeaderCellDef>Point Rokok</th>
-        <td mat-cell *matCellDef="let element">{{ element.nominalPerPointRokok }}</td>
+      <ng-container matColumnDef="paymentDays">
+        <th mat-header-cell *matHeaderCellDef>Payment Days</th>
+        <td mat-cell *matCellDef="let element">{{ element.paymentDays }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="nominalPerPointRokokCredit">
-        <th mat-header-cell *matHeaderCellDef>Point Rokok Credit</th>
-        <td mat-cell *matCellDef="let element">{{ element.nominalPerPointRokokCredit }}</td>
+      <ng-container matColumnDef="limitType">
+        <th mat-header-cell *matHeaderCellDef>Limit Type</th>
+        <td mat-cell *matCellDef="let element">{{ element.limitType }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="multiplyPointFullPaymentRokok">
-        <th mat-header-cell *matHeaderCellDef>Multiply Rokok</th>
-        <td mat-cell *matCellDef="let element">{{ element.multiplyPointFullPaymentRokok }}</td>
+      <ng-container matColumnDef="nIK">
+        <th mat-header-cell *matHeaderCellDef>NIK</th>
+        <td mat-cell *matCellDef="let element">{{ element.nIK }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="nominalPerPointNonRokok">
-        <th mat-header-cell *matHeaderCellDef>Non Rokok</th>
-        <td mat-cell *matCellDef="let element">{{ element.nominalPerPointNonRokok }}</td>
+      <ng-container matColumnDef="displayMembership">
+        <th mat-header-cell *matHeaderCellDef>Membership</th>
+        <td mat-cell *matCellDef="let element">{{ element.displayMembership }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="nominalPerPointNonRokokCredit">
-        <th mat-header-cell *matHeaderCellDef>Non Rokok Credit</th>
-        <td mat-cell *matCellDef="let element">{{ element.nominalPerPointNonRokokCredit }}</td>
+      <ng-container matColumnDef="membershipBarCode">
+        <th mat-header-cell *matHeaderCellDef>Bar Code</th>
+        <td mat-cell *matCellDef="let element">{{ element.membershipBarCode }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="multiplyPointFullPaymentNonRokok">
-        <th mat-header-cell *matHeaderCellDef>Multiply Non Rokok</th>
-        <td mat-cell *matCellDef="let element">{{ element.multiplyPointFullPaymentNonRokok }}</td>
+      <ng-container matColumnDef="deliveryDays">
+        <th mat-header-cell *matHeaderCellDef>Delivery Days</th>
+        <td mat-cell *matCellDef="let element">{{ element.deliveryDays }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="minimalAmountNonRokokForNotification">
-        <th mat-header-cell *matHeaderCellDef>Multiply Non Rokok</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.minimalAmountNonRokokForNotification }}
-        </td>
+      <ng-container matColumnDef="feesRokok">
+        <th mat-header-cell *matHeaderCellDef>Fees Rokok</th>
+        <td mat-cell *matCellDef="let element">{{ element.feesRokok }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="feesNonRokok">
+        <th mat-header-cell *matHeaderCellDef>Fees Non Rokok</th>
+        <td mat-cell *matCellDef="let element">{{ element.feesNonRokok }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="salesmanNIK">
+        <th mat-header-cell *matHeaderCellDef>Salesman NIK</th>
+        <td mat-cell *matCellDef="let element">{{ element.salesmanNIK }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

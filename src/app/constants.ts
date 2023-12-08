@@ -30,7 +30,7 @@ export class Constants {
       icon: "person",
       title: "Customer",
       description: "Sync Customer Configuration to a branch",
-      redirectUri: "/Area",
+      redirectUri: "/Customer",
     },
     {
       icon: "ballot",

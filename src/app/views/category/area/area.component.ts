@@ -1,38 +1,31 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ProudctModel } from "../../../models/product-model";
-import { TableComponent } from "../../../global-component/table/table.component";
 import { AreaModel } from "../../../models/area-model";
-import { TableColumnHeader } from "../../../models/ui-models/table-column-header";
-import { DropDownComponent } from "../../../global-component/drop-down/drop-down.component";
 import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
+import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { SelectionModel } from "@angular/cdk/collections";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatSelectModule } from "@angular/material/select";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: "app-area",
   standalone: true,
   templateUrl: "./area.component.html",
   styleUrl: "./area.component.scss",
-  imports: [CommonModule, TableComponent, DropDownComponent],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
 })
 export class AreaComponent {
-  columnHeaders: string[] = ["code", "description"];
-  column: TableColumnHeader[] = [
-    { title: "Code", property: "code", width: "100px" },
-    { title: "Description", property: "description", width: "max-content" },
-  ];
-  data: AreaModel[] = [
-    { code: "bgr", description: "Bogor" },
-    { code: "dpk", description: "Depok" },
-    { code: "jkt", description: "Jakarta" },
-    { code: "bdg", description: "Bandung" },
-    { code: "smg", description: "Semarang" },
-    { code: "ptk", description: "Pontianak" },
-    { code: "mlg", description: "Malang" },
-    { code: "bwi", description: "Bali" },
-    { code: "jmb", description: "Jambi" },
-  ];
-  selectedData: AreaModel[] = [];
-
   branchList: DropDownMenu[] = [
     { key: "cfr", value: "Cifor" },
     { key: "cld", value: "Cilendek" },
@@ -42,14 +35,42 @@ export class AreaComponent {
   selectedBranch: DropDownMenu = this.branchList[0];
   branchDestination: DropDownMenu = this.branchList[0];
 
-  onCheckedChange(value: AreaModel) {
-    // console.log(value);
-  }
-  onBranchChange(event: DropDownMenu) {
-    this.selectedBranch = event;
+  displayedColumns: string[] = ["code", "description"];
+  dataSource = new MatTableDataSource<AreaModel>(DATA);
+  selectedData = new SelectionModel<AreaModel>(true, []);
+
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
-  onDestinationBranchChange(event: DropDownMenu) {
-    this.branchDestination = event;
+  isAllSelected() {
+    const numSelected = this.selectedData.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected == numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  toggleAllRows() {
+    this.isAllSelected()
+      ? this.selectedData.clear()
+      : this.dataSource.data.forEach((row) => this.selectedData.select(row));
+  }
+
+  toggleRow(event: any, row: any) {
+    event ? this.selectedData.toggle(row) : null;
   }
 }
+
+const DATA: AreaModel[] = [
+  { code: "bgr", description: "Bogor" },
+  { code: "dpk", description: "Depok" },
+  { code: "jkt", description: "Jakarta" },
+  { code: "bdg", description: "Bandung" },
+  { code: "smg", description: "Semarang" },
+  { code: "ptk", description: "Pontianak" },
+  { code: "mlg", description: "Malang" },
+  { code: "bwi", description: "Bali" },
+  { code: "jmb", description: "Jambi" },
+];

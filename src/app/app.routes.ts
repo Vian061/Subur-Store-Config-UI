@@ -5,6 +5,7 @@ import { AreaComponent } from "./views/category/area/area.component";
 import { BankComponent } from "./views/category/bank/bank.component";
 import { BranchComponent } from "./views/category/branch/branch.component";
 import { BusinessPartnerComponent } from "./views/category/business-partner/business-partner.component";
+import { CustomerComponent } from "./views/category/customer/customer.component";
 
 export const routes: Routes = [
   { path: "", component: DashboardComponent },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: "Bank", component: BankComponent },
   { path: "Branch", component: BranchComponent },
   { path: "BusinessPartner", component: BusinessPartnerComponent },
+  { path: "Customer", component: CustomerComponent },
 ];

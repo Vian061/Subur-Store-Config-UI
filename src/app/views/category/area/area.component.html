@@ -3,29 +3,64 @@
 
   <p>Area data from Subur Database</p>
 
-  <div class="d-flex flex-row align-items-center mb-3 branch-container">
-    <div class="d-flex flex-row align-items-center branch">
-      <label>From Branch : </label>
-      <app-drop-down
-        class="ms-3"
-        (selectedValueChange)="onBranchChange($event)"
-        [dropDownList]="branchList" />
-    </div>
-
-    <div class="d-flex flex-row align-items-center ms-3 branch">
-      <label>To Branch : </label>
-      <app-drop-down
-        class="ms-3"
-        (selectedValueChange)="onDestinationBranchChange($event)"
-        [dropDownList]="branchList" />
-    </div>
-
-    <button type="button" class="btn btn-success ms-3 px-4">Sync</button>
+  <div class="d-flex flex-row align-items-center">
+    <mat-form-field>
+      <mat-label>Source Branch</mat-label>
+      <mat-select [(value)]="selectedBranch">
+        <mat-option>None</mat-option>
+        <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="ms-3">
+      <mat-label>Destination Branch</mat-label>
+      <mat-select [(value)]="branchDestination">
+        <mat-option>None</mat-option>
+        <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" style="margin-bottom: 22px" class="ms-3">
+      Submit
+    </button>
   </div>
-  <app-table
-    [columnHeaders]="column"
-    [useCheckBox]="false"
-    (onSingleChecked)="onCheckedChange($event)"
-    [data]="data"
-    [(selectedData)]="selectedData" />
+  <div class="mat-elevation-z3">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="$event ? toggleAllRows() : null"
+            [checked]="selectedData.hasValue() && isAllSelected()"
+            [indeterminate]="selectedData.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="toggleRow($event, row)"
+            [checked]="selectedData.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Code Column -->
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Code</th>
+        <td mat-cell *matCellDef="let element">{{ element.code }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>
 </div>

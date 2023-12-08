@@ -2,29 +2,90 @@
   <h1>Bank</h1>
 
   <p>Bank data from Subur Database</p>
-  <div class="d-flex flex-row align-items-center mb-3 branch-container">
-    <div class="d-flex flex-row align-items-center branch">
-      <label>From Branch : </label>
-      <app-drop-down
-        class="ms-3"
-        (selectedValueChange)="onBranchChange($event)"
-        [dropDownList]="branchList" />
-    </div>
 
-    <div class="d-flex flex-row align-items-center ms-3 branch">
-      <label>To Branch : </label>
-      <app-drop-down
-        class="ms-3"
-        (selectedValueChange)="onDestinationBranchChange($event)"
-        [dropDownList]="branchList" />
-    </div>
-
-    <button type="button" class="btn btn-success ms-3 px-4">Sync</button>
+  <div class="d-flex flex-row align-items-center">
+    <mat-form-field>
+      <mat-label>Source Branch</mat-label>
+      <mat-select [(value)]="selectedBranch">
+        <mat-option>None</mat-option>
+        <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="ms-3">
+      <mat-label>Destination Branch</mat-label>
+      <mat-select [(value)]="branchDestination">
+        <mat-option>None</mat-option>
+        <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" style="margin-bottom: 22px" class="ms-3">
+      Submit
+    </button>
   </div>
-  <app-table
-    [columnHeaders]="column"
-    [useCheckBox]="false"
-    (onSingleChecked)="onCheckedChange($event)"
-    [data]="data"
-    [(selectedData)]="selectedData" />
+
+  <div class="mat-elevation-z3">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="$event ? toggleAllRows() : null"
+            [checked]="selectedData.hasValue() && isAllSelected()"
+            [indeterminate]="selectedData.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="toggleRow($event, row)"
+            [checked]="selectedData.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Code Column -->
+      <ng-container matColumnDef="accountName">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.accountName }}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="accountNo">
+        <th mat-header-cell *matHeaderCellDef>Account No</th>
+        <td mat-cell *matCellDef="let element">{{ element.accountNo }}</td>
+      </ng-container>
+
+      <!-- Balance Column -->
+      <ng-container matColumnDef="bankName">
+        <th mat-header-cell *matHeaderCellDef>Bank Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.bankName }}</td>
+      </ng-container>
+
+      <!-- Point Reward Column -->
+      <ng-container matColumnDef="journalAccountCode">
+        <th mat-header-cell *matHeaderCellDef>Journal Accouont Code</th>
+        <td mat-cell *matCellDef="let element">{{ element.journalAccountCode }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="journalAccountName">
+        <th mat-header-cell *matHeaderCellDef>Journal Accouont Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.journalAccountName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="imageUrl">
+        <th mat-header-cell *matHeaderCellDef>Image</th>
+        <td mat-cell *matCellDef="let element">
+          <img src="{{ element.imageUrl }}" alt="img" style="max-width: 100%; height: 60px" />
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements">
+    </mat-paginator>
+  </div>
 </div>
