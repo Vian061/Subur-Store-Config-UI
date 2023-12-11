@@ -1,6 +1,7 @@
 import { Component, ElementRef, Renderer2 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-drawer",
@@ -10,7 +11,10 @@ import { RouterModule } from "@angular/router";
   styleUrl: "./drawer.component.scss",
 })
 export class DrawerComponent {
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  authService: AuthService;
+  constructor(private el: ElementRef, private renderer: Renderer2, authService: AuthService) {
+    this.authService = authService;
+  }
   menuVisiblity: boolean = false;
 
   drawerVisibility() {

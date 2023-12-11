@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { Router, RouterModule } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 
 @Component({
   selector: "app-card-menu",
@@ -10,7 +10,7 @@ import { Router, RouterModule } from "@angular/router";
   styleUrl: "./card-menu.component.scss",
 })
 export class CardMenuComponent {
-  constructor(private router: Router) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   @Input() icon: string = "block";
   @Input() title: string = "Title";
@@ -18,6 +18,6 @@ export class CardMenuComponent {
   @Input() redirectUri: string = "/";
 
   redirectToPage() {
-    this.router.navigate([this.redirectUri]);
+    this.router.navigate([this.redirectUri], { relativeTo: this.route });
   }
 }

@@ -17,10 +17,13 @@ import { UomComponent } from "./views/category/uom/uom.component";
 import { UomGroupComponent } from "./views/category/uom-group/uom-group.component";
 import { WarehouseComponent } from "./views/category/warehouse/warehouse.component";
 import { WarehouseBinComponent } from "./views/category/warehouse-bin/warehouse-bin.component";
+import { LoginComponent } from "./views/login/login.component";
+import { AuthGuard } from "./services/auth-guard";
 
 export const routes: Routes = [
-  { path: "", component: DashboardComponent },
-  { path: "Category", component: CategoryComponent },
+  { path: "", canActivate: [AuthGuard], component: DashboardComponent },
+  { path: "Login", component: LoginComponent },
+  { path: "Category", canActivate: [AuthGuard], component: CategoryComponent },
   { path: "Area", component: AreaComponent },
   { path: "Bank", component: BankComponent },
   { path: "Branch", component: BranchComponent },

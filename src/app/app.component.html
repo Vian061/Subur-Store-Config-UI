@@ -1,4 +1,4 @@
-<div class="grid-view">
+<div class="grid-view" *ngIf="authService.isAuthenticated(); else loginTemplate">
   <div class="drawer">
     <div class="drawer-size">
       <app-drawer />
@@ -8,3 +8,7 @@
     <router-outlet />
   </div>
 </div>
+
+<ng-template #loginTemplate>
+  <router-outlet />
+</ng-template>

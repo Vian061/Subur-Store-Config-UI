@@ -1,13 +1,36 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatCardModule } from "@angular/material/card";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatButtonModule } from "@angular/material/button";
+import { FormsModule } from "@angular/forms";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
-  selector: 'app-login',
+  selector: "app-login",
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  imports: [
+    CommonModule,
+    MatCardModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+  ],
+  templateUrl: "./login.component.html",
+  styleUrl: "./login.component.scss",
 })
 export class LoginComponent {
+  authService: AuthService;
+  username: string = "";
+  password: string = "";
 
+  constructor(authService: AuthService) {
+    this.authService = authService;
+  }
+
+  login() {
+    this.authService.login(this.username, this.password);
+  }
 }

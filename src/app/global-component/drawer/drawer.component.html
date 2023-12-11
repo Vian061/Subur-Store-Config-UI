@@ -39,6 +39,7 @@
   </div>
 
   <button
+    (click)="authService.logout()"
     [ngClass]="{
       'drawer-icon-container': menuVisiblity == false,
       'drawer-icon-container-show': menuVisiblity == true
