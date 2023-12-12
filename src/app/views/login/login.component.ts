@@ -6,6 +6,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
 import { FormsModule } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
+import { NetworkService } from "../../services/network.service";
 
 @Component({
   selector: "app-login",
@@ -28,9 +29,5 @@ export class LoginComponent {
 
   constructor(authService: AuthService) {
     this.authService = authService;
-  }
-
-  login() {
-    this.authService.login(this.username, this.password);
   }
 }

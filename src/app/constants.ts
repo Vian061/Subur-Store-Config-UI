@@ -99,4 +99,15 @@ export class Constants {
       redirectUri: "/Warehouse-Bin",
     },
   ];
+  static UrlEndpoint: any = class {
+    static identityServerEndpoint: string = "http://192.168.1.15:44310/";
+    static passwordTokenRequestEndpoint: string = this.identityServerEndpoint + "connect/token";
+    static apiEndpoint: string = "http://192.168.1.15:44320/";
+  };
+
+  static is4Client: any = class {
+    static client_id = "SuburStoreConfiguration-Web";
+    static client_secret = "SuburStoreConfiguration-Web";
+    static scope = "profile roles openid offline_access B2CService-ApiScope";
+  };
 }

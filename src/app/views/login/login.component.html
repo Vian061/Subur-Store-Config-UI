@@ -21,7 +21,13 @@
             [(ngModel)]="password" />
         </mat-form-field>
 
-        <button mat-raised-button color="warn" class="full-width" (click)="login()">Primary</button>
+        <button
+          mat-raised-button
+          color="warn"
+          class="full-width"
+          (click)="authService.login(this.username, this.password)">
+          Submit
+        </button>
       </form>
     </mat-card-content>
   </mat-card>
