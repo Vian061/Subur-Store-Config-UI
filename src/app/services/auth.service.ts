@@ -54,9 +54,9 @@ export class AuthService {
 
           this._isAuthenticated = true;
         },
-        error: (error) => {
-          console.error(error);
-        },
+        // error: (error) => {
+        //   console.error(error);
+        // },
       });
     }
   }
