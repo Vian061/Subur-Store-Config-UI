@@ -6,7 +6,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
 import { FormsModule } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
-import { NetworkService } from "../../services/network.service";
+import { MessageService } from "primeng/api";
+import { Toast, ToastModule } from "primeng/toast";
+import { error } from "console";
 
 @Component({
   selector: "app-login",
@@ -18,7 +20,9 @@ import { NetworkService } from "../../services/network.service";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: "./login.component.html",
   styleUrl: "./login.component.scss",
 })
@@ -27,7 +31,35 @@ export class LoginComponent {
   username: string = "";
   password: string = "";
 
-  constructor(authService: AuthService) {
+  constructor(authService: AuthService, private messageService: MessageService) {
     this.authService = authService;
+  }
+
+  showError(error: string) {
+    var detail = "";
+    if (error) {
+      detail = error.replaceAll("_", " ");
+    }
+    this.messageService.add({
+      severity: "error",
+      summary: "Login Failed",
+      detail: detail,
+    });
+  }
+
+  showSuccess(username: string) {
+    this.messageService.add({
+      severity: "success",
+      summary: "Login Success",
+      detail: "Welcome " + username,
+    });
+  }
+
+  login(username: string, password: string) {
+    this.authService.login(username, password).subscribe({
+      error: (error) => {
+        this.showError(error);
+      },
+    });
   }
 }

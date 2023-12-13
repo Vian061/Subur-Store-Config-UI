@@ -1,9 +1,9 @@
-import { Injectable, inject } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { Observable, of } from "rxjs";
-import { NetworkService } from "./network.service";
+import { Observable, catchError, map, of, throwError } from "rxjs";
 import { Constants } from "../constants";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: "root",
@@ -11,13 +11,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 export class AuthService {
   private _isAuthenticated: boolean = false;
   private currentUser: any;
-  private router: Router;
 
-  constructor(router: Router, private http: HttpClient) {
-    this.router = router;
-    // this._isAuthenticated = !!sessionStorage.getItem("token");
-    // this.currentUser = JSON.parse(sessionStorage.getItem("user") || "{}");
-  }
+  constructor(private router: Router, private http: HttpClient) {}
 
   getToken(username: string, password: string): Observable<any> {
     const body =
@@ -41,23 +36,28 @@ export class AuthService {
     });
   }
 
-  login(username: string, password: string) {
+  login(username: string, password: string): Observable<any> {
+    var errorResponse = "";
     if (username && password) {
-      this.currentUser = { username, password }; // Store user data
+      return this.getToken(username, password).pipe(
+        map((response) => {
+          var decodedToken = jwtDecode<any>(response.access_token);
+          sessionStorage.setItem("token", response.access_token);
+          sessionStorage.setItem("refresh_token", response.access_token);
+          sessionStorage.setItem("username", decodedToken.name);
 
-      this.getToken(username, password).subscribe({
-        next: (response) => {
-          console.log(response);
-          sessionStorage.setItem("token", "someToken"); // Store authentication token
-          sessionStorage.setItem("user", JSON.stringify(this.currentUser)); // Store user data
           this.router.navigate(["/"]);
-
           this._isAuthenticated = true;
-        },
-        // error: (error) => {
-        //   console.error(error);
-        // },
-      });
+
+          return decodedToken.name;
+        }),
+        catchError((error) => {
+          console.log("error:", error);
+          return throwError(() => error.error.error_description);
+        })
+      );
+    } else {
+      return throwError(() => "Username & Passsword cannot be empty");
     }
   }
 
@@ -65,7 +65,8 @@ export class AuthService {
     this._isAuthenticated = false;
     this.currentUser = null;
     sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("refresh_token");
+    sessionStorage.removeItem("username");
     this.router.navigate(["/Login"]);
   }
 

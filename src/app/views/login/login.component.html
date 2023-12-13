@@ -21,11 +21,12 @@
             [(ngModel)]="password" />
         </mat-form-field>
 
+        <p-toast></p-toast>
         <button
           mat-raised-button
           color="warn"
           class="full-width"
-          (click)="authService.login(this.username, this.password)">
+          (click)="login(this.username, this.password)">
           Submit
         </button>
       </form>
