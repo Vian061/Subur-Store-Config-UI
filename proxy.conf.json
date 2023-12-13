@@ -3,5 +3,10 @@
     "target": "http://192.168.1.15:44310",
     "secure": false,
     "changeOrigin": true
+  },
+  "/api": {
+    "target": "http://192.168.1.15:44350",
+    "secure": false,
+    "changeOrigin": true
   }
 }

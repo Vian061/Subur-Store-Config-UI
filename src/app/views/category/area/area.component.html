@@ -4,26 +4,16 @@
   <p>Area data from Subur Database</p>
 
   <div class="d-flex flex-row align-items-center">
-    <mat-form-field>
-      <mat-label>Source Branch</mat-label>
-      <mat-select [(value)]="selectedBranch">
-        <mat-option>None</mat-option>
-        <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="ms-3">
-      <mat-label>Destination Branch</mat-label>
-      <mat-select [(value)]="branchDestination">
-        <mat-option>None</mat-option>
-        <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <button mat-raised-button color="primary" style="margin-bottom: 22px" (click)="loadData()">
+      Load Data
+    </button>
     <button
       mat-raised-button
       color="primary"
       style="margin-bottom: 22px"
       class="ms-3"
-      [disabled]="selectedBranch == null || branchDestination == null">
+      [disabled]="buttonDisabled"
+      (click)="confirmDialog()">
       Submit
     </button>
   </div>
@@ -37,6 +27,7 @@
       <ng-container matColumnDef="select">
         <th mat-header-cell *matHeaderCellDef style="width: 50px">
           <mat-checkbox
+            [(ngModel)]="checkAll"
             (change)="$event ? toggleAllRows() : null"
             [checked]="selectedData.hasValue() && isAllSelected()"
             [indeterminate]="selectedData.hasValue() && !isAllSelected()">

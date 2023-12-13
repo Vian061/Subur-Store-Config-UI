@@ -18,6 +18,7 @@ export class NetworkService {
     const token = sessionStorage.getItem("accessToken");
 
     if (token) {
+      this.httpOptions.headers = this.httpOptions.headers.set("Access-Control-Allow-Origin", `*`);
       this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${token}`);
     }
 

@@ -102,7 +102,10 @@ export class Constants {
   static UrlEndpoint: any = class {
     static identityServerEndpoint: string = "http://192.168.1.15:44310/";
     static passwordTokenRequestEndpoint: string = this.identityServerEndpoint + "connect/token";
-    static apiEndpoint: string = "http://192.168.1.15:44320/";
+    static apiEndpoint: string = "http://192.168.1.15:44350/";
+    static apiV1: string = this.apiEndpoint + "api/v1/";
+
+    static areaEndpoint: string = this.apiV1 + "Areas";
   };
 
   static is4Client: any = class {
