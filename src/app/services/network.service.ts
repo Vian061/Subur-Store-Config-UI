@@ -1,21 +1,16 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { AuthService } from "./auth.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class NetworkService {
-  private httpOptions = {
-    headers: new HttpHeaders({
-      "Content-Type": "application/json",
-    }),
-  };
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   get(apiUrl: string): Observable<any> {
-    const token = sessionStorage.getItem("token");
+    const token = this.authService.getToken();
 
     var httpOptions = {
       headers: new HttpHeaders({
@@ -30,32 +25,47 @@ export class NetworkService {
   }
 
   post(apiUrl: string, item: any): Observable<any> {
-    const token = sessionStorage.getItem("token");
+    const token = this.authService.getToken();
 
-    if (token) {
-      this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${token}`);
-    }
+    var httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+        "Access-Control-Allow-Origin": "*",
+      }),
+    };
 
-    return this.http.post<any>(apiUrl, item, this.httpOptions);
+    return this.http.post<any>(apiUrl, item, httpOptions);
   }
 
   update(apiUrl: string, item: any): Observable<any> {
-    const token = sessionStorage.getItem("token");
+    const token = this.authService.getToken();
 
-    if (token) {
-      this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${token}`);
-    }
+    var httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+        "Access-Control-Allow-Origin": "*",
+      }),
+    };
 
-    return this.http.put<any>(apiUrl, item, this.httpOptions);
+    return this.http.put<any>(apiUrl, item, httpOptions);
   }
 
   delete(apiUrl: string): Observable<any> {
-    const token = sessionStorage.getItem("token");
+    const token = this.authService.getToken();
 
-    if (token) {
-      this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${token}`);
-    }
+    var httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+        "Access-Control-Allow-Origin": "*",
+      }),
+    };
 
-    return this.http.delete<any>(apiUrl, this.httpOptions);
+    return this.http.delete<any>(apiUrl, httpOptions);
   }
 }

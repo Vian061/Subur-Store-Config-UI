@@ -5,15 +5,50 @@ import { Constants } from "../constants";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { jwtDecode } from "jwt-decode";
 import { BehaviorSubject } from "rxjs";
+import { CookieService } from "ngx-cookie-service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  private _isAuthenticated = new BehaviorSubject<boolean>(false);
   private currentUser: any;
+  private TOKEN_KEY = "acess_token";
+  private REFRESH_TOKEN_KEY = "refresh_token";
+  private USERNAME_KEY = "username";
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private cookieService: CookieService
+  ) {}
+
+  // Method to set token in a cookie
+  setToken(token: string): void {
+    this.cookieService.set(this.TOKEN_KEY, token);
+  }
+
+  // Method to get token from a cookie
+  getToken(): string | undefined {
+    return this.cookieService.get(this.TOKEN_KEY);
+  }
+  // Method to set token in a cookie
+  setRefreshToken(token: string): void {
+    this.cookieService.set(this.REFRESH_TOKEN_KEY, token);
+  }
+
+  // Method to get token from a cookie
+  getRefreshToken(): string | undefined {
+    return this.cookieService.get(this.REFRESH_TOKEN_KEY);
+  }
+  // Method to set token in a cookie
+  setUsername(token: string): void {
+    this.cookieService.set(this.USERNAME_KEY, token);
+  }
+
+  // Method to get token from a cookie
+  getUsername(): string | undefined {
+    return this.cookieService.get(this.USERNAME_KEY);
+  }
 
   generateToken(username: string, password: string): Observable<any> {
     const body =
@@ -42,11 +77,10 @@ export class AuthService {
       return this.generateToken(username, password).pipe(
         map((response) => {
           var decodedToken = jwtDecode<any>(response.access_token);
-          sessionStorage.setItem("token", response.access_token);
-          sessionStorage.setItem("refresh_token", response.access_token);
-          sessionStorage.setItem("username", decodedToken.name);
+          this.setToken(response.access_token);
+          this.setRefreshToken(response.refresh_token);
+          this.setUsername(decodedToken.name);
 
-          this._isAuthenticated.next(true);
           this.router.navigate(["/"]);
 
           return "";
@@ -61,18 +95,14 @@ export class AuthService {
   }
 
   logout(): void {
-    this._isAuthenticated.next(false);
     this.currentUser = null;
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("refresh_token");
-    sessionStorage.removeItem("username");
+    this.cookieService.deleteAll();
+
     this.router.navigate(["/Login"]);
   }
 
-  isAuthenticated(): Observable<boolean> {
-    console.log(name);
-
-    return this._isAuthenticated.asObservable();
+  isAuthenticated(): boolean {
+    return !!this.getToken();
   }
 
   getCurrentUser(): any {

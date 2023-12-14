@@ -46,7 +46,9 @@ export class AreaComponent {
     private networkService: NetworkService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
-  ) {}
+  ) {
+    this.isButtonDisabled();
+  }
 
   loadData() {
     this.checkAll = false;
@@ -54,6 +56,7 @@ export class AreaComponent {
     this.networkService.get(Constants.UrlEndpoint.areaEndpoint + "/POSData").subscribe({
       next: (response) => {
         this.dataSource = response;
+        this.isButtonDisabled();
       },
       error: (error) => {
         console.log(error);
@@ -61,28 +64,45 @@ export class AreaComponent {
     });
   }
 
-  selectAllChange() {
-    console.log(this.selectedData);
+  isButtonDisabled() {
+    if (this.dataSource.length <= 0) {
+      this.buttonDisabled = true;
+    } else {
+      if (this.useCheckbox) {
+        if (this.selectedData.length <= 0) {
+          this.buttonDisabled = true;
+        } else {
+          this.buttonDisabled = false;
+        }
+      } else {
+        this.buttonDisabled = false;
+      }
+    }
   }
 
-  selectChange() {}
+  selectAllChange() {
+    this.isButtonDisabled();
+  }
+
+  selectChange() {
+    this.isButtonDisabled();
+  }
+
+  checkBoxChange() {
+    this.isButtonDisabled();
+  }
 
   confirmDialog() {
-    var message = "Are you sure want to proceed All Data?";
+    var message = "Are you sure want to process All Data?";
     if (this.useCheckbox)
-      message = "Are you sure want to proceed " + this.selectedData.length + " Data?";
+      message = "Are you sure want to process " + this.selectedData.length + " Data?";
 
     this.confirmationService.confirm({
       dismissableMask: true,
       closeOnEscape: true,
       message: message,
       accept: () => {
-        this.messageService.add({
-          severity: "info",
-          summary: "Confirmed",
-          detail: "You have accepted",
-          life: 3000,
-        });
+        this.submit();
       },
       reject: () => {
         this.messageService.add({
@@ -98,22 +118,46 @@ export class AreaComponent {
   submit() {
     /// if useCheckBox post selectedData otherwise post dataSource
     if (this.useCheckbox) {
-      this.networkService.post(Constants.UrlEndpoint.areaEndpoint, this.selectedData);
+      this.networkService.post(Constants.UrlEndpoint.areaEndpoint, this.selectedData).subscribe({
+        next: (response) => {
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Submit Success",
+            life: 3000,
+          });
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error " + error.status,
+            detail: error.statusText,
+            life: 4000,
+          });
+        },
+      });
     }
     {
-      this.networkService.post(Constants.UrlEndpoint.areaEndpoint, this.dataSource);
+      this.networkService.post(Constants.UrlEndpoint.areaEndpoint, this.dataSource).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.messageService.add({
+            severity: "success",
+            summary: "Success",
+            detail: "Submit Success",
+            life: 3000,
+          });
+        },
+        error: (error) => {
+          console.log("erro", error);
+          this.messageService.add({
+            severity: "error",
+            summary: "Error " + error.status,
+            detail: error.statusText,
+            life: 4000,
+          });
+        },
+      });
     }
   }
 }
-
-const DATA: AreaModel[] = [
-  { code: "bgr", description: "Bogor" },
-  { code: "dpk", description: "Depok" },
-  { code: "jkt", description: "Jakarta" },
-  { code: "bdg", description: "Bandung" },
-  { code: "smg", description: "Semarang" },
-  { code: "ptk", description: "Pontianak" },
-  { code: "mlg", description: "Malang" },
-  { code: "bwi", description: "Bali" },
-  { code: "jmb", description: "Jambi" },
-];

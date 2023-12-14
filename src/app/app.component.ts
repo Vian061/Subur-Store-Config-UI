@@ -15,14 +15,15 @@ export class AppComponent {
   title = "StoreConfiguration";
   authenticated: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+    this.authenticated = this.authService.isAuthenticated();
+  }
 
   ngAfterViewInit() {
-    this.authService.isAuthenticated().subscribe({
-      next: (authenticated) => {
-        console.log(authenticated);
-        this.authenticated = authenticated;
-      },
-    });
+    // this.authService.isAuthenticated().subscribe({
+    //   next: (authenticated) => {
+    //     this.authenticated = authenticated;
+    //   },
+    // });
   }
 }
