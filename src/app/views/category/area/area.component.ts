@@ -1,21 +1,18 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { AreaModel } from "../../../models/area-model";
-import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
-import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { SelectionModel } from "@angular/cdk/collections";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatSelectModule } from "@angular/material/select";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatButtonModule } from "@angular/material/button";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FormsModule } from "@angular/forms";
-import { ConfirmDialogComponent } from "../../../global-component/confirm-dialog/confirm-dialog.component";
-import { MatInputModule } from "@angular/material/input";
-import { MatDialog } from "@angular/material/dialog";
-import { NetworkService } from "../../../services/network.service";
 import { Constants } from "../../../constants";
+import { ButtonModule } from "primeng/button";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { TableModule } from "primeng/table";
+import { CardModule } from "primeng/card";
+import { DialogModule } from "primeng/dialog";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ToastModule } from "primeng/toast";
+
+import { NetworkService } from "../../../services/network.service";
+import { ConfirmationService, MessageService } from "primeng/api";
 
 @Component({
   selector: "app-area",
@@ -24,16 +21,16 @@ import { Constants } from "../../../constants";
   styleUrl: "./area.component.scss",
   imports: [
     CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatSlideToggleModule,
     FormsModule,
-    MatInputModule,
+    ButtonModule,
+    InputSwitchModule,
+    TableModule,
+    CardModule,
+    ConfirmDialogModule,
+    DialogModule,
+    ToastModule,
   ],
+  providers: [ConfirmationService, MessageService],
 })
 export class AreaComponent {
   useCheckbox: boolean = false;
@@ -41,19 +38,22 @@ export class AreaComponent {
   buttonDisabled: boolean = false;
 
   displayedColumns: string[] = ["code", "description"];
-  dataSource = new MatTableDataSource<AreaModel>([]);
-  selectedData = new SelectionModel<AreaModel>(true, []);
+  dataSource: AreaModel[] = [];
+  selectedData: AreaModel[] = [];
 
-  constructor(public dialog: MatDialog, private networkService: NetworkService) {}
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  constructor(
+    // public dialog: MatDialog,
+    private networkService: NetworkService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
 
   loadData() {
     this.checkAll = false;
-    this.selectedData.clear();
-    this.networkService.get(Constants.UrlEndpoint.areaEndpoint).subscribe({
+    this.selectedData = [];
+    this.networkService.get(Constants.UrlEndpoint.areaEndpoint + "/POSData").subscribe({
       next: (response) => {
-        console.log(response);
-        this.dataSource = new MatTableDataSource<AreaModel>(response);
+        this.dataSource = response;
       },
       error: (error) => {
         console.log(error);
@@ -61,60 +61,37 @@ export class AreaComponent {
     });
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    if (this.useCheckbox) this.displayedColumns.unshift("select");
+  selectAllChange() {
+    console.log(this.selectedData);
   }
 
-  onSlideChange() {
-    if (this.useCheckbox) {
-      if (!this.selectedData.hasValue()) {
-        this.buttonDisabled = true;
-      }
-      this.displayedColumns.unshift("select");
-    } else {
-      this.buttonDisabled = false;
-      this.displayedColumns.splice(0, 1);
-    }
-  }
-
-  isAllSelected() {
-    const numSelected = this.selectedData.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  toggleAllRows() {
-    if (this.isAllSelected()) {
-      this.buttonDisabled = true;
-      this.selectedData.clear();
-    } else {
-      this.buttonDisabled = false;
-      this.dataSource.data.forEach((row) => this.selectedData.select(row));
-    }
-  }
-
-  toggleRow(event: any, row: any) {
-    event ? this.selectedData.toggle(row) : null;
-    this.selectedData.selected.length > 0
-      ? (this.buttonDisabled = false)
-      : (this.buttonDisabled = true);
-  }
+  selectChange() {}
 
   confirmDialog() {
-    var confirmText = "Are you sure want to save all data?";
-    if (this.useCheckbox) {
-      confirmText = "Are you sure want to save selected data?";
-    }
+    var message = "Are you sure want to proceed All Data?";
+    if (this.useCheckbox)
+      message = "Are you sure want to proceed " + this.selectedData.length + " Data?";
 
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: confirmText,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log("The dialog was closed with result:", result);
-      if (result) this.submit();
+    this.confirmationService.confirm({
+      dismissableMask: true,
+      closeOnEscape: true,
+      message: message,
+      accept: () => {
+        this.messageService.add({
+          severity: "info",
+          summary: "Confirmed",
+          detail: "You have accepted",
+          life: 3000,
+        });
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Rejected",
+          detail: "You have rejected",
+          life: 3000,
+        });
+      },
     });
   }
 

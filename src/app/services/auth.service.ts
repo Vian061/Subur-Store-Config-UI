@@ -4,17 +4,18 @@ import { Observable, catchError, map, of, throwError } from "rxjs";
 import { Constants } from "../constants";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { jwtDecode } from "jwt-decode";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  private _isAuthenticated: boolean = false;
+  private _isAuthenticated = new BehaviorSubject<boolean>(false);
   private currentUser: any;
 
   constructor(private router: Router, private http: HttpClient) {}
 
-  getToken(username: string, password: string): Observable<any> {
+  generateToken(username: string, password: string): Observable<any> {
     const body =
       "grant_type=password&username=" +
       username +
@@ -37,22 +38,20 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<any> {
-    var errorResponse = "";
     if (username && password) {
-      return this.getToken(username, password).pipe(
+      return this.generateToken(username, password).pipe(
         map((response) => {
           var decodedToken = jwtDecode<any>(response.access_token);
           sessionStorage.setItem("token", response.access_token);
           sessionStorage.setItem("refresh_token", response.access_token);
           sessionStorage.setItem("username", decodedToken.name);
 
+          this._isAuthenticated.next(true);
           this.router.navigate(["/"]);
-          this._isAuthenticated = true;
 
-          return decodedToken.name;
+          return "";
         }),
         catchError((error) => {
-          console.log("error:", error);
           return throwError(() => error.error.error_description);
         })
       );
@@ -62,7 +61,7 @@ export class AuthService {
   }
 
   logout(): void {
-    this._isAuthenticated = false;
+    this._isAuthenticated.next(false);
     this.currentUser = null;
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("refresh_token");
@@ -70,8 +69,10 @@ export class AuthService {
     this.router.navigate(["/Login"]);
   }
 
-  isAuthenticated(): boolean {
-    return this._isAuthenticated;
+  isAuthenticated(): Observable<boolean> {
+    console.log(name);
+
+    return this._isAuthenticated.asObservable();
   }
 
   getCurrentUser(): any {

@@ -1,26 +1,25 @@
 import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatCardModule } from "@angular/material/card";
-import { MatInputModule } from "@angular/material/input";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatButtonModule } from "@angular/material/button";
 import { FormsModule } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
 import { MessageService } from "primeng/api";
-import { Toast, ToastModule } from "primeng/toast";
-import { error } from "console";
+import { ToastModule } from "primeng/toast";
+import { CardModule } from "primeng/card";
+import { ButtonModule } from "primeng/button";
+import { InputTextModule } from "primeng/inputtext";
+import { PasswordModule } from "primeng/password";
 
 @Component({
   selector: "app-login",
   standalone: true,
   imports: [
     CommonModule,
-    MatCardModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
     ToastModule,
+    CardModule,
+    ButtonModule,
+    FormsModule,
+    InputTextModule,
+    PasswordModule,
   ],
   providers: [MessageService],
   templateUrl: "./login.component.html",

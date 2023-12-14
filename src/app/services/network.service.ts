@@ -17,7 +17,6 @@ export class NetworkService {
   get(apiUrl: string): Observable<any> {
     const token = sessionStorage.getItem("token");
 
-    console.log(token);
     var httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
