@@ -50,7 +50,7 @@ export class AreaComponent {
   loadData() {
     this.checkAll = false;
     this.selectedData.clear();
-    this.networkService.get(Constants.UrlEndpoint.areaEndpoint + "/POSData").subscribe({
+    this.networkService.get(Constants.UrlEndpoint.areaEndpoint).subscribe({
       next: (response) => {
         console.log(response);
         this.dataSource = new MatTableDataSource<AreaModel>(response);

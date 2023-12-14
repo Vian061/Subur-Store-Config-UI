@@ -15,18 +15,23 @@ export class NetworkService {
   constructor(private http: HttpClient) {}
 
   get(apiUrl: string): Observable<any> {
-    const token = sessionStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("token");
 
-    if (token) {
-      this.httpOptions.headers = this.httpOptions.headers.set("Access-Control-Allow-Origin", `*`);
-      this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${token}`);
-    }
+    console.log(token);
+    var httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: "Bearer " + token,
+        "Access-Control-Allow-Origin": "*",
+      }),
+    };
 
-    return this.http.get<any>(apiUrl, this.httpOptions);
+    return this.http.get<any>(apiUrl, httpOptions);
   }
 
   post(apiUrl: string, item: any): Observable<any> {
-    const token = sessionStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("token");
 
     if (token) {
       this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${token}`);
@@ -36,7 +41,7 @@ export class NetworkService {
   }
 
   update(apiUrl: string, item: any): Observable<any> {
-    const token = sessionStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("token");
 
     if (token) {
       this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${token}`);
@@ -46,7 +51,7 @@ export class NetworkService {
   }
 
   delete(apiUrl: string): Observable<any> {
-    const token = sessionStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("token");
 
     if (token) {
       this.httpOptions.headers = this.httpOptions.headers.set("Authorization", `Bearer ${token}`);

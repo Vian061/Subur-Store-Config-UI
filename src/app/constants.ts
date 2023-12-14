@@ -102,8 +102,10 @@ export class Constants {
   static UrlEndpoint: any = class {
     static identityServerEndpoint: string = "http://192.168.1.15:44310/";
     static passwordTokenRequestEndpoint: string = this.identityServerEndpoint + "connect/token";
-    static apiEndpoint: string = "http://192.168.1.15:44350/";
-    static apiV1: string = this.apiEndpoint + "api/v1/";
+    // static apiEndpoint: string = "http://localhost:5084/";
+    // static apiEndpoint: string = "http://192.168.1.15:44350/";
+    // static apiV1: string = this.apiEndpoint + "api/v1/";
+    static apiV1: string = "api/v1/";
 
     static areaEndpoint: string = this.apiV1 + "Areas";
   };
@@ -111,6 +113,6 @@ export class Constants {
   static is4Client: any = class {
     static client_id = "SuburStoreConfiguration-Web";
     static client_secret = "SuburStoreConfiguration-Web";
-    static scope = "profile roles openid offline_access B2CService-ApiScope";
+    static scope = "profile roles openid offline_access SuburStoreConfiguration-ApiScope";
   };
 }
