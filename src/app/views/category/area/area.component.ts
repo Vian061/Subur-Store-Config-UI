@@ -147,7 +147,6 @@ export class AreaComponent {
     {
       this.networkService.post(Constants.UrlEndpoint.areaEndpoint, this.dataSource).subscribe({
         next: (response) => {
-          console.log(response);
           this.messageService.add({
             severity: "success",
             summary: "Success",
@@ -156,7 +155,6 @@ export class AreaComponent {
           });
         },
         error: (error) => {
-          console.log("erro", error);
           this.messageService.add({
             severity: "error",
             summary: "Error " + error.status,

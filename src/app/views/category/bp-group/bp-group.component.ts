@@ -15,10 +15,8 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { BusinessPartnerGroupModel } from "../../../models/business-partner-group-model";
 
 @Component({
-  selector: "app-business-partner",
+  selector: "app-bp-group",
   standalone: true,
-  templateUrl: "./business-partner.component.html",
-  styleUrl: "./business-partner.component.scss",
   imports: [
     CommonModule,
     FormsModule,
@@ -31,8 +29,10 @@ import { BusinessPartnerGroupModel } from "../../../models/business-partner-grou
     ToastModule,
   ],
   providers: [ConfirmationService, MessageService],
+  templateUrl: "./bp-group.component.html",
+  styleUrl: "./bp-group.component.scss",
 })
-export class BusinessPartnerComponent {
+export class BpGroupComponent {
   useCheckbox: boolean = false;
   checkAll: boolean = false;
   buttonDisabled: boolean = false;
@@ -53,22 +53,24 @@ export class BusinessPartnerComponent {
     this.loading = true;
     this.checkAll = false;
     this.selectedData = [];
-    this.networkService.get(Constants.UrlEndpoint.branchesEndpoint).subscribe({
-      next: (response) => {
-        this.dataSource = response;
-        this.isButtonDisabled();
-        this.loading = false;
-      },
-      error: (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
-        this.loading = false;
-      },
-    });
+    this.networkService
+      .get(Constants.UrlEndpoint.businessPartnerGroupEndpoint + "/POSData")
+      .subscribe({
+        next: (response) => {
+          this.dataSource = response;
+          this.isButtonDisabled();
+          this.loading = false;
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error " + error.status,
+            detail: error.statusText,
+            life: 4000,
+          });
+          this.loading = false;
+        },
+      });
   }
 
   isButtonDisabled() {
@@ -126,7 +128,7 @@ export class BusinessPartnerComponent {
     /// if useCheckBox post selectedData otherwise post dataSource
     if (this.useCheckbox) {
       this.networkService
-        .post(Constants.UrlEndpoint.branchesEndpoint, this.selectedData)
+        .post(Constants.UrlEndpoint.businessPartnerGroupEndpoint, this.selectedData)
         .subscribe({
           next: (response) => {
             this.messageService.add({
@@ -147,26 +149,26 @@ export class BusinessPartnerComponent {
         });
     }
     {
-      this.networkService.post(Constants.UrlEndpoint.branchesEndpoint, this.dataSource).subscribe({
-        next: (response) => {
-          console.log(response);
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Submit Success",
-            life: 3000,
-          });
-        },
-        error: (error) => {
-          console.log("erro", error);
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
-        },
-      });
+      this.networkService
+        .post(Constants.UrlEndpoint.businessPartnerGroupEndpoint, this.dataSource)
+        .subscribe({
+          next: (response) => {
+            this.messageService.add({
+              severity: "success",
+              summary: "Success",
+              detail: "Submit Success",
+              life: 3000,
+            });
+          },
+          error: (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error " + error.status,
+              detail: error.statusText,
+              life: 4000,
+            });
+          },
+        });
     }
   }
 }

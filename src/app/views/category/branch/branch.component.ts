@@ -53,7 +53,7 @@ export class BranchComponent {
     this.loading = true;
     this.checkAll = false;
     this.selectedData = [];
-    this.networkService.get(Constants.UrlEndpoint.branchesEndpoint).subscribe({
+    this.networkService.get(Constants.UrlEndpoint.branchesEndpoint + "/POSData").subscribe({
       next: (response) => {
         this.dataSource = response;
         this.isButtonDisabled();
@@ -149,7 +149,6 @@ export class BranchComponent {
     {
       this.networkService.post(Constants.UrlEndpoint.branchesEndpoint, this.dataSource).subscribe({
         next: (response) => {
-          console.log(response);
           this.messageService.add({
             severity: "success",
             summary: "Success",
@@ -158,7 +157,6 @@ export class BranchComponent {
           });
         },
         error: (error) => {
-          console.log("erro", error);
           this.messageService.add({
             severity: "error",
             summary: "Error " + error.status,

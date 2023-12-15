@@ -4,7 +4,6 @@ import { CategoryComponent } from "./views/category/category.component";
 import { AreaComponent } from "./views/category/area/area.component";
 import { BankComponent } from "./views/category/bank/bank.component";
 import { BranchComponent } from "./views/category/branch/branch.component";
-import { BusinessPartnerComponent } from "./views/category/business-partner/business-partner.component";
 import { CustomerComponent } from "./views/category/customer/customer.component";
 import { ItemGroupComponent } from "./views/category/item-group/item-group.component";
 import { JournalAccountComponent } from "./views/category/journal-account/journal-account.component";
@@ -19,6 +18,7 @@ import { WarehouseComponent } from "./views/category/warehouse/warehouse.compone
 import { WarehouseBinComponent } from "./views/category/warehouse-bin/warehouse-bin.component";
 import { LoginComponent } from "./views/login/login.component";
 import { AuthGuard } from "./services/auth-guard";
+import { BpGroupComponent } from "./views/category/bp-group/bp-group.component";
 
 export const routes: Routes = [
   { path: "", canActivate: [AuthGuard], component: DashboardComponent },
@@ -27,7 +27,7 @@ export const routes: Routes = [
   { path: "Area", canActivate: [AuthGuard], component: AreaComponent },
   { path: "Bank", canActivate: [AuthGuard], component: BankComponent },
   { path: "Branch", canActivate: [AuthGuard], component: BranchComponent },
-  { path: "BusinessPartner", canActivate: [AuthGuard], component: BusinessPartnerComponent },
+  { path: "BP-Group", canActivate: [AuthGuard], component: BpGroupComponent },
   { path: "Customer", canActivate: [AuthGuard], component: CustomerComponent },
   { path: "Item-Group", canActivate: [AuthGuard], component: ItemGroupComponent },
   { path: "Journal-Account", canActivate: [AuthGuard], component: JournalAccountComponent },

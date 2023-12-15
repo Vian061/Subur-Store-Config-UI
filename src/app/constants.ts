@@ -22,9 +22,9 @@ export class Constants {
     },
     {
       icon: "handshake",
-      title: "Business Partner",
-      description: "Sync Business Partner Configuration to a branch",
-      redirectUri: "/BusinessPartner",
+      title: "Business Partner Group",
+      description: "Sync Business Partner Group Configuration to a branch",
+      redirectUri: "/BP-Group",
     },
     {
       icon: "person",
@@ -110,7 +110,8 @@ export class Constants {
     static areaEndpoint: string = this.apiV1 + "Areas";
     static bankEndpoint: string = this.apiV1 + "Banks";
     static branchesEndpoint: string = this.apiV1 + "Branches";
-    static businessPartnerGroupEndpoint: string = this.apiV1 + "BusinessPartnerGroup";
+    static businessPartnerGroupEndpoint: string = this.apiV1 + "BusinessPartnerGroups";
+    static customerEndpoint: string = this.apiV1 + "Customers";
   };
 
   static is4Client: any = class {

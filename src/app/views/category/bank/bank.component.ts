@@ -53,8 +53,10 @@ export class BankComponent {
     this.loading = true;
     this.checkAll = false;
     this.selectedData = [];
-    this.networkService.get(Constants.UrlEndpoint.bankEndpoint).subscribe({
+    this.networkService.get(Constants.UrlEndpoint.bankEndpoint + "/POSData").subscribe({
       next: (response) => {
+        console.log("Data from :", Constants.UrlEndpoint.bankEndpoint + "/POSData");
+        console.log(response);
         this.dataSource = response;
         this.isButtonDisabled();
         this.loading = false;
@@ -147,7 +149,6 @@ export class BankComponent {
     {
       this.networkService.post(Constants.UrlEndpoint.bankEndpoint, this.dataSource).subscribe({
         next: (response) => {
-          console.log(response);
           this.messageService.add({
             severity: "success",
             summary: "Success",
@@ -156,7 +157,6 @@ export class BankComponent {
           });
         },
         error: (error) => {
-          console.log("erro", error);
           this.messageService.add({
             severity: "error",
             summary: "Error " + error.status,
