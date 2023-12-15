@@ -36,13 +36,12 @@ export class AreaComponent {
   useCheckbox: boolean = false;
   checkAll: boolean = false;
   buttonDisabled: boolean = false;
+  loading: boolean = false;
 
-  displayedColumns: string[] = ["code", "description"];
   dataSource: AreaModel[] = [];
   selectedData: AreaModel[] = [];
 
   constructor(
-    // public dialog: MatDialog,
     private networkService: NetworkService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
@@ -51,15 +50,23 @@ export class AreaComponent {
   }
 
   loadData() {
+    this.loading = true;
     this.checkAll = false;
     this.selectedData = [];
     this.networkService.get(Constants.UrlEndpoint.areaEndpoint + "/POSData").subscribe({
       next: (response) => {
         this.dataSource = response;
         this.isButtonDisabled();
+        this.loading = false;
       },
       error: (error) => {
-        console.log(error);
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: error.statusText,
+          life: 4000,
+        });
+        this.loading = false;
       },
     });
   }

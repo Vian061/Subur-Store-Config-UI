@@ -323,6 +323,7 @@ h1 {
 
 ::-webkit-scrollbar {
   width: $scroll-bar-width; /* Width of the scrollbar */
+  height: $scroll-bar-width; /* height of the scrollbar */
 }
 
 /* Track */

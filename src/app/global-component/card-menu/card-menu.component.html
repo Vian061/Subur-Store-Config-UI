@@ -1,5 +1,10 @@
-<div (click)="redirectToPage()" routerLinkActive="router-link-active" class="card">
-  <span class="material-symbols-outlined"> {{ icon }} </span>
-  <h3>{{ title }}</h3>
-  <p>{{ desc }}</p>
+<div class="flex justify-content-center">
+  <div
+    (click)="redirectToPage()"
+    routerLinkActive="router-link-active"
+    class="card d-flex flex-column">
+    <span class="material-symbols-outlined"> {{ icon }} </span>
+    <h3>{{ title }}</h3>
+    <p>{{ desc }}</p>
+  </div>
 </div>

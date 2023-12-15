@@ -1,4 +1,4 @@
-<div class="card flex justify-content-center p-3">
+<div class="card flex justify-content-center flex-column p-3">
   <h1>Area</h1>
 
   <p>Area data from Subur Database</p>
@@ -20,6 +20,7 @@
   </div>
 
   <p-table
+    [loading]="loading"
     [value]="dataSource"
     [(selection)]="selectedData"
     (onHeaderCheckboxToggle)="selectAllChange()"
