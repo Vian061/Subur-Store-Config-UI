@@ -6,6 +6,7 @@
   <div class="d-flex flex-row align-items-center mb-2">
     <p-button
       label="Load Data"
+      [disabled]="loading"
       (onClick)="loadButtonEvent()"
       severity="success"
       class="me-2"></p-button>
@@ -35,8 +36,6 @@
     [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [lazy]="true"
-    (onLazyLoad)="onLazyLoad($event)"
     [totalRecords]="totalRecords"
     [(rows)]="pageSize"
     (onPage)="onPageSizeChange($event)"

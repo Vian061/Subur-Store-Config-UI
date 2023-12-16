@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { CustomerModel } from "../../../models/customer-model";
+import { last } from "lodash";
 
 @Component({
   selector: "app-customer",
@@ -50,12 +51,18 @@ export class CustomerComponent {
     private messageService: MessageService
   ) {
     this.isButtonDisabled();
+    this.countData();
   }
 
   loadButtonEvent() {
     this.selectedData = [];
     this.checkAll = false;
-    this.loadData();
+    this.dataSource = [];
+
+    this.loading = true;
+    this.loadData().then((result) => {
+      if (result) console.log(result);
+    });
   }
 
   onPageSizeChange(event: any) {
@@ -63,54 +70,63 @@ export class CustomerComponent {
     this.pageSize = event.rows;
   }
 
-  onLazyLoad(event: any) {
-    console.log(event);
-    this.pageNumber = Math.floor(event.first / event.rows) + 1;
+  // onLazyLoad(event: any) {
+  //   console.log(event);
+  //   this.pageNumber = Math.floor(event.first / event.rows) + 1;
 
-    this.loadData();
+  //   this.loadData();
+  // }
+
+  loadData(): Promise<boolean> {
+    return new Promise((resolve) => {
+      // setTimeout(() => {
+      const lastPageNumber = Math.ceil(this.totalRecords / this.pageSize);
+      for (let i = this.pageNumber; i <= lastPageNumber; i++) {
+        this.networkService
+          .get(Constants.UrlEndpoint.customerEndpoint + "/POSData/" + i + "/" + this.pageSize)
+          .subscribe({
+            next: (response) => {
+              for (const data of response) {
+                this.dataSource.push(data);
+              }
+              console.log("loaded %d of %d data : %d", i, lastPageNumber, this.dataSource.length);
+              if (this.dataSource.length === this.totalRecords) {
+                this.loading = false;
+                this.isButtonDisabled();
+
+                console.log("Load finised");
+                resolve(true);
+              }
+            },
+            error: (error) => {
+              this.messageService.add({
+                severity: "error",
+                summary: "Error " + error.status,
+                detail: error.statusText,
+                life: 4000,
+              });
+              resolve(false);
+            },
+          });
+      }
+      // }, 0.1);
+    });
   }
 
-  loadData() {
-    setTimeout(() => {
-      this.loading = true;
-      this.networkService
-        .get(
-          Constants.UrlEndpoint.customerEndpoint +
-            "/POSData/" +
-            this.pageNumber +
-            "/" +
-            this.pageSize
-        )
-        .subscribe({
-          next: (response) => {
-            this.dataSource = response;
-            this.isButtonDisabled();
-            this.loading = false;
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.statusText,
-              life: 4000,
-            });
-            this.loading = false;
-          },
+  private countData() {
+    this.networkService.get(Constants.UrlEndpoint.customerEndpoint + "/POSData/Count").subscribe({
+      next: (response) => {
+        this.totalRecords = response;
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: error.statusText,
+          life: 4000,
         });
-      this.networkService.get(Constants.UrlEndpoint.customerEndpoint + "/POSData/Count").subscribe({
-        next: (response) => {
-          this.totalRecords = response;
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
-        },
-      });
-    }, 0.1);
+      },
+    });
   }
 
   isButtonDisabled() {
