@@ -37,6 +37,9 @@ export class CustomerComponent {
   checkAll: boolean = false;
   buttonDisabled: boolean = false;
   loading: boolean = false;
+  pageNumber: number = 1;
+  pageSize: number = 50;
+  totalRecords: number = 0;
 
   dataSource: CustomerModel[] = [];
   selectedData: CustomerModel[] = [];
@@ -49,30 +52,65 @@ export class CustomerComponent {
     this.isButtonDisabled();
   }
 
-  onPageChange(event: any) {
+  loadButtonEvent() {
+    this.selectedData = [];
+    this.checkAll = false;
+    this.loadData();
+  }
+
+  onPageSizeChange(event: any) {
+    this.pageNumber = Math.floor(event.first / event.rows) + 1;
+    this.pageSize = event.rows;
+  }
+
+  onLazyLoad(event: any) {
     console.log(event);
+    this.pageNumber = Math.floor(event.first / event.rows) + 1;
+
+    this.loadData();
   }
 
   loadData() {
-    this.loading = true;
-    this.checkAll = false;
-    this.selectedData = [];
-    this.networkService.get(Constants.UrlEndpoint.customerEndpoint + "/POSData").subscribe({
-      next: (response) => {
-        this.dataSource = response;
-        this.isButtonDisabled();
-        this.loading = false;
-      },
-      error: (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
+    setTimeout(() => {
+      this.loading = true;
+      this.networkService
+        .get(
+          Constants.UrlEndpoint.customerEndpoint +
+            "/POSData/" +
+            this.pageNumber +
+            "/" +
+            this.pageSize
+        )
+        .subscribe({
+          next: (response) => {
+            this.dataSource = response;
+            this.isButtonDisabled();
+            this.loading = false;
+          },
+          error: (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error " + error.status,
+              detail: error.statusText,
+              life: 4000,
+            });
+            this.loading = false;
+          },
         });
-        this.loading = false;
-      },
-    });
+      this.networkService.get(Constants.UrlEndpoint.customerEndpoint + "/POSData/Count").subscribe({
+        next: (response) => {
+          this.totalRecords = response;
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error " + error.status,
+            detail: error.statusText,
+            life: 4000,
+          });
+        },
+      });
+    }, 0.1);
   }
 
   isButtonDisabled() {
@@ -91,7 +129,16 @@ export class CustomerComponent {
     }
   }
 
-  selectAllChange() {
+  selectAllChange(event: any) {
+    const checked = event.checked;
+
+    if (checked) {
+      this.selectedData = this.dataSource;
+      this.checkAll = true;
+    } else {
+      this.selectedData = [];
+      this.checkAll = false;
+    }
     this.isButtonDisabled();
   }
 
@@ -172,24 +219,3 @@ export class CustomerComponent {
     }
   }
 }
-
-const DATA: CustomerModel[] = [
-  {
-    code: "C001",
-    description: "Regular Customer",
-    groupType: "Retail",
-    salt: "SALT123",
-    pIN: "1234",
-    emailAddress: "customer@example.com",
-    outstandingBills: 200,
-    paymentDays: "30",
-    limitType: "Standard",
-    nIK: "NIK123",
-    displayMembership: "Gold",
-    membershipBarCode: "MB123",
-    deliveryDays: "Mon, Wed, Fri",
-    feesRokok: 5,
-    feesNonRokok: 10,
-    salesmanNIK: "SALENIK001",
-  },
-];

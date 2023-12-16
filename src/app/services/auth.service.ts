@@ -101,8 +101,8 @@ export class AuthService {
     this.router.navigate(["/Login"]);
   }
 
-  isAuthenticated(): boolean {
-    return !!this.getToken();
+  isAuthenticated(): Observable<boolean> {
+    return of(!!this.getToken());
   }
 
   getCurrentUser(): any {

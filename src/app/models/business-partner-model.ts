@@ -7,19 +7,19 @@ export interface BusinessPartnerModel {
   name: string;
   balance: number;
   pointReward: number;
-  pIC: string;
+  pic: string;
   phone: string;
   fax: string;
   mobile: string;
   area: AreaModel;
-  adresses: AddressModel[];
-  bPGroup: BusinessPartnerGroupModel;
+  addresses: AddressModel[];
+  bpGroup: BusinessPartnerGroupModel;
   creditLimit: number;
   isTaxCount: boolean;
   overallPointReward: number;
   latitude: number;
   longitude: number;
-  acuracy: number;
+  accuracy: number;
   birthDate: Date;
   transportType: string;
 }

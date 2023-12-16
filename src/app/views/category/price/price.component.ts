@@ -146,7 +146,7 @@ const DATA: PriceModel[] = [
         customerGroup: {
           code: "CustomerGroup001",
           description: "Customer Group 1",
-          groupType: "Type A",
+          groupType: 1,
         },
         baseHorizontalPercentageIncrement: 5,
         baseVerticalPercentageIncrement: 10,

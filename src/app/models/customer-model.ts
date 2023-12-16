@@ -1,15 +1,16 @@
 import { BusinessPartnerGroupModel } from "./business-partner-group-model";
+import { BusinessPartnerModel } from "./business-partner-model";
 
-export interface CustomerModel extends BusinessPartnerGroupModel {
+export interface CustomerModel extends BusinessPartnerModel {
   salt: string;
-  pIN: string;
+  pin: string;
   emailAddress: string;
   outstandingBills: number;
   paymentDays: string;
-  limitType: string;
-  nIK: string;
+  limitType: number;
+  nik: string;
   displayMembership: string;
-  membershipBarCode: string;
+  membershipBarcode: string;
   deliveryDays: string;
   feesRokok: number;
   feesNonRokok: number;

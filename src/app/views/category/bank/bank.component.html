@@ -10,6 +10,15 @@
     <p-button label="Submit" (onClick)="confirmDialog()" [disabled]="buttonDisabled"></p-button>
   </div>
 
+  <div class="d-flex flex-row align-items-center mb-2">
+    <p-inputSwitch
+      [(ngModel)]="useCheckbox"
+      (onChange)="checkBoxChange()"
+      ariaLabelledBy="chckbox"
+      class="d-flex"></p-inputSwitch>
+    <label class="ms-2" id="chckbox">Use Checkbox?</label>
+  </div>
+
   <p-table
     [loading]="loading"
     [value]="dataSource"

@@ -172,16 +172,3 @@ export class BpGroupComponent {
     }
   }
 }
-
-const DATA: BusinessPartnerGroupModel[] = [
-  {
-    code: "BP001",
-    description: "Business Partner Group 1",
-    groupType: "Type A",
-  },
-  {
-    code: "BP002",
-    description: "Business Partner Group 2",
-    groupType: "Type B",
-  },
-];
