@@ -24,7 +24,6 @@ export const AuthGuard: CanActivateFn = (route, state) => {
   // );
   return authService.isAuthenticated().pipe(
     map((authenticated) => {
-      console.log(authenticated);
       if (!authenticated) {
         return router.parseUrl("Login");
       } else {

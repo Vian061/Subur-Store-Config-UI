@@ -3,16 +3,17 @@
     <h1 style="text-align: center" class="mb-3">Login</h1>
     <div class="d-flex flex-column">
       <div class="d-flex flex-column mb-3">
-        <label for="username">Username</label>
+        <label for="username" class="font-bold block mb-2"> Username </label>
         <input
-          class="p-inputtext-sm"
+          class="p-inputtext-sm w-full"
           pInputText
           id="username"
           aria-describedby="username-help"
-          [(ngModel)]="username" />
+          [(ngModel)]="username"
+          [autofocus]="true" />
       </div>
       <div class="d-flex flex-column mb-3">
-        <label for="passwrod">Password</label>
+        <label for="passwrod" class="font-bold block mb-2">Password</label>
         <input
           class="p-inputtext-sm"
           pPassword
@@ -24,11 +25,7 @@
       </div>
 
       <p-toast></p-toast>
-      <button
-        pButton
-        pRipple
-        class="p-button-success button"
-        (click)="login(this.username, this.password)">
+      <button pButton pRipple class="button" (click)="login(this.username, this.password)">
         Submit
       </button>
     </div>

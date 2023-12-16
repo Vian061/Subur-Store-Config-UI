@@ -9,11 +9,13 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
 import { FormsModule } from "@angular/forms";
 import { Constants } from "../../../constants";
+import { ProgressBarModule } from "primeng/progressbar";
+import { ProgressSpinnerModule } from "primeng/progressspinner";
+import { MessagesModule } from "primeng/messages";
 
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { CustomerModel } from "../../../models/customer-model";
-import { last } from "lodash";
 
 @Component({
   selector: "app-customer",
@@ -28,6 +30,8 @@ import { last } from "lodash";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    ProgressBarModule,
+    ProgressSpinnerModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./customer.component.html",
@@ -41,6 +45,7 @@ export class CustomerComponent {
   pageNumber: number = 1;
   pageSize: number = 50;
   totalRecords: number = 0;
+  progressValue: number = 0;
 
   dataSource: CustomerModel[] = [];
   selectedData: CustomerModel[] = [];
@@ -51,7 +56,6 @@ export class CustomerComponent {
     private messageService: MessageService
   ) {
     this.isButtonDisabled();
-    this.countData();
   }
 
   loadButtonEvent() {
@@ -60,8 +64,10 @@ export class CustomerComponent {
     this.dataSource = [];
 
     this.loading = true;
-    this.loadData().then((result) => {
-      if (result) console.log(result);
+    this.countData().then((result) => {
+      if (result) {
+        this.loadData();
+      }
     });
   }
 
@@ -70,62 +76,59 @@ export class CustomerComponent {
     this.pageSize = event.rows;
   }
 
-  // onLazyLoad(event: any) {
-  //   console.log(event);
-  //   this.pageNumber = Math.floor(event.first / event.rows) + 1;
+  loadData() {
+    const lastPageNumber = Math.ceil(this.totalRecords / this.pageSize);
+    for (let i = this.pageNumber; i <= lastPageNumber; i++) {
+      this.networkService
+        .get(Constants.UrlEndpoint.customerEndpoint + "/POSData/" + i + "/" + this.pageSize)
+        .subscribe({
+          next: (response) => {
+            for (const data of response) {
+              this.dataSource.push(data);
+            }
 
-  //   this.loadData();
-  // }
+            this.updateProgressValue(i, lastPageNumber);
 
-  loadData(): Promise<boolean> {
-    return new Promise((resolve) => {
-      // setTimeout(() => {
-      const lastPageNumber = Math.ceil(this.totalRecords / this.pageSize);
-      for (let i = this.pageNumber; i <= lastPageNumber; i++) {
-        this.networkService
-          .get(Constants.UrlEndpoint.customerEndpoint + "/POSData/" + i + "/" + this.pageSize)
-          .subscribe({
-            next: (response) => {
-              for (const data of response) {
-                this.dataSource.push(data);
-              }
-              console.log("loaded %d of %d data : %d", i, lastPageNumber, this.dataSource.length);
-              if (this.dataSource.length === this.totalRecords) {
-                this.loading = false;
-                this.isButtonDisabled();
-
-                console.log("Load finised");
-                resolve(true);
-              }
-            },
-            error: (error) => {
-              this.messageService.add({
-                severity: "error",
-                summary: "Error " + error.status,
-                detail: error.statusText,
-                life: 4000,
-              });
-              resolve(false);
-            },
-          });
-      }
-      // }, 0.1);
-    });
+            if (this.dataSource.length === this.totalRecords) {
+              this.loading = false;
+              this.isButtonDisabled();
+              this.progressValue = 0;
+            }
+          },
+          error: (error) => {
+            this.messageService.add({
+              severity: "error",
+              summary: "Error " + error.status,
+              detail: error.statusText,
+              life: 4000,
+            });
+          },
+        });
+    }
   }
 
-  private countData() {
-    this.networkService.get(Constants.UrlEndpoint.customerEndpoint + "/POSData/Count").subscribe({
-      next: (response) => {
-        this.totalRecords = response;
-      },
-      error: (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
-      },
+  updateProgressValue(currentPage: number, lastPageNumber: number): void {
+    const progress = (currentPage / lastPageNumber) * 100;
+    this.progressValue = parseFloat(progress.toFixed(2));
+  }
+
+  private countData(): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.networkService.get(Constants.UrlEndpoint.customerEndpoint + "/POSData/Count").subscribe({
+        next: (response) => {
+          this.totalRecords = response;
+          resolve(true);
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error " + error.status,
+            detail: error.statusText,
+            life: 4000,
+          });
+          resolve(false);
+        },
+      });
     });
   }
 
@@ -176,6 +179,7 @@ export class CustomerComponent {
       closeOnEscape: true,
       message: message,
       accept: () => {
+        this.loading = true;
         this.submit();
       },
       reject: () => {
@@ -190,40 +194,28 @@ export class CustomerComponent {
   }
 
   submit() {
-    /// if useCheckBox post selectedData otherwise post dataSource
-    if (this.useCheckbox) {
-      this.networkService
-        .post(Constants.UrlEndpoint.customerEndpoint, this.selectedData)
-        .subscribe({
-          next: (response) => {
+    const batchSize = 100;
+    const data = this.useCheckbox ? this.selectedData : this.dataSource;
+    const totalBatch = Math.ceil(data.length / batchSize);
+
+    for (let i = 0; i < totalBatch; i++) {
+      const batchData = data.slice(i * batchSize, (i + 1) * batchSize);
+
+      this.updateProgressValue(i, totalBatch);
+
+      this.networkService.post(Constants.UrlEndpoint.customerEndpoint, batchData).subscribe({
+        next: (response) => {
+          if (i === totalBatch - 1) {
             this.messageService.add({
               severity: "success",
               summary: "Success",
               detail: "Submit Success",
               life: 3000,
             });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.statusText,
-              life: 4000,
-            });
-          },
-        });
-    }
-    {
-      this.networkService.post(Constants.UrlEndpoint.customerEndpoint, this.dataSource).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Submit Success",
-            life: 3000,
-          });
+          }
         },
         error: (error) => {
+          console.log(error);
           this.messageService.add({
             severity: "error",
             summary: "Error " + error.status,

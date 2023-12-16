@@ -15,7 +15,7 @@
     <p-button label="Submit" (onClick)="confirmDialog()" [disabled]="buttonDisabled"></p-button>
   </div>
 
-  <div class="d-flex flex-row align-items-center mb-2">
+  <div class="flex flex-row align-items-center mb-2">
     <p-inputSwitch
       [(ngModel)]="useCheckbox"
       (onChange)="checkBoxChange()"
@@ -24,6 +24,17 @@
     <label class="ms-2" id="chckbox">Use Checkbox?</label>
   </div>
 
+  <div
+    *ngIf="loading"
+    class="p-3 mb-3"
+    [ngStyle]="{
+      backgroundColor: 'var(--highlight-bg)',
+      color: 'var(--highlight-text-color)',
+      borderRadius: 'var(--border-radius)',
+    }">
+    loading...
+    <p-progressBar [value]="progressValue"></p-progressBar>
+  </div>
   <p-table
     [loading]="loading"
     [value]="dataSource"

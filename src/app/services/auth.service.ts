@@ -15,12 +15,15 @@ export class AuthService {
   private TOKEN_KEY = "acess_token";
   private REFRESH_TOKEN_KEY = "refresh_token";
   private USERNAME_KEY = "username";
+  private isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private cookieService: CookieService
-  ) {}
+  ) {
+    this.checkToken();
+  }
 
   // Method to set token in a cookie
   setToken(token: string): void {
@@ -72,6 +75,11 @@ export class AuthService {
     });
   }
 
+  checkToken() {
+    const token = this.getToken();
+    if (token) this.isAuthenticatedSubject.next(true);
+  }
+
   login(username: string, password: string): Observable<any> {
     if (username && password) {
       return this.generateToken(username, password).pipe(
@@ -80,6 +88,7 @@ export class AuthService {
           this.setToken(response.access_token);
           this.setRefreshToken(response.refresh_token);
           this.setUsername(decodedToken.name);
+          this.isAuthenticatedSubject.next(true);
 
           this.router.navigate(["/"]);
 
@@ -97,12 +106,13 @@ export class AuthService {
   logout(): void {
     this.currentUser = null;
     this.cookieService.deleteAll();
+    this.isAuthenticatedSubject.next(false);
 
     this.router.navigate(["/Login"]);
   }
 
   isAuthenticated(): Observable<boolean> {
-    return of(!!this.getToken());
+    return this.isAuthenticatedSubject.asObservable();
   }
 
   getCurrentUser(): any {

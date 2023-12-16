@@ -129,49 +129,26 @@ export class ItemGroupComponent {
   }
 
   submit() {
-    /// if useCheckBox post selectedData otherwise post dataSource
-    if (this.useCheckbox) {
-      this.networkService
-        .post(Constants.UrlEndpoint.itemGroupEndpoint, this.selectedData)
-        .subscribe({
-          next: (response) => {
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Submit Success",
-              life: 3000,
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.statusText,
-              life: 4000,
-            });
-          },
+    const data = this.useCheckbox ? this.selectedData : this.dataSource;
+
+    this.networkService.post(Constants.UrlEndpoint.itemGroupEndpoint, data).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Submit Success",
+          life: 3000,
         });
-    }
-    {
-      this.networkService.post(Constants.UrlEndpoint.itemGroupEndpoint, this.dataSource).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Submit Success",
-            life: 3000,
-          });
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
-        },
-      });
-    }
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: error.statusText,
+          life: 4000,
+        });
+      },
+    });
   }
 }
 

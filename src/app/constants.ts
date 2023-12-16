@@ -114,6 +114,7 @@ export class Constants {
     static customerEndpoint: string = this.apiV1 + "Customers";
     static itemGroupEndpoint: string = this.apiV1 + "ItemGroups";
     static journalAccountEndpoint: string = this.apiV1 + "JournalAccounts";
+    static manufacturerEndpoint: string = this.apiV1 + "Manufacturers";
   };
 
   static is4Client: any = class {
