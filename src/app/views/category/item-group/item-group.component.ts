@@ -144,7 +144,7 @@ export class ItemGroupComponent {
         this.messageService.add({
           severity: "error",
           summary: "Error " + error.status,
-          detail: error.statusText,
+          detail: error.error.detail,
           life: 4000,
         });
       },

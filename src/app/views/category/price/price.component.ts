@@ -1,15 +1,20 @@
 import { Component, ViewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { SelectionModel } from "@angular/cdk/collections";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatSelectModule } from "@angular/material/select";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatButtonModule } from "@angular/material/button";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { ButtonModule } from "primeng/button";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { TableModule } from "primeng/table";
+import { CardModule } from "primeng/card";
+import { DialogModule } from "primeng/dialog";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ToastModule } from "primeng/toast";
 import { FormsModule } from "@angular/forms";
-import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
+import { Constants } from "../../../constants";
+import { ProgressBarModule } from "primeng/progressbar";
+import { ProgressSpinnerModule } from "primeng/progressspinner";
+import { MessagesModule } from "primeng/messages";
+
+import { NetworkService } from "../../../services/network.service";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { PriceModel } from "../../../models/price-model";
 
 @Component({
@@ -17,72 +22,229 @@ import { PriceModel } from "../../../models/price-model";
   standalone: true,
   imports: [
     CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatSlideToggleModule,
     FormsModule,
+    ButtonModule,
+    InputSwitchModule,
+    TableModule,
+    CardModule,
+    ConfirmDialogModule,
+    DialogModule,
+    ToastModule,
+    ProgressBarModule,
+    ProgressSpinnerModule,
   ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: "./price.component.html",
   styleUrl: "./price.component.scss",
 })
 export class PriceComponent {
   useCheckbox: boolean = false;
-  branchList: DropDownMenu[] = [
-    { key: "cfr", value: "Cifor" },
-    { key: "cld", value: "Cilendek" },
-    { key: "ats", value: "Toko Atas" },
-  ];
+  checkAll: boolean = false;
+  buttonDisabled: boolean = false;
+  loading: boolean = false;
+  pageNumber: number = 1;
+  pageSize: number = 50;
+  totalRecords: number = 0;
+  progressValue: number = 0;
 
-  selectedBranch?: DropDownMenu;
-  branchDestination?: DropDownMenu;
+  dataSource: PriceModel[] = [];
+  selectedData: PriceModel[] = [];
 
-  displayedColumns: string[] = [
-    "name",
-    "averagePrice",
-    "customPrice",
-    "validFrom",
-    "validTo",
-    "proudct",
-    "isActive",
-    "details",
-  ];
-  dataSource = new MatTableDataSource<PriceModel>(DATA);
-  selectedData = new SelectionModel<PriceModel>(true, []);
-
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    if (this.useCheckbox) this.displayedColumns.unshift("select");
+  constructor(
+    private networkService: NetworkService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {
+    this.isButtonDisabled();
   }
 
-  onSlideChange() {
-    if (this.useCheckbox) {
-      this.displayedColumns.unshift("select");
-    } else {
-      this.displayedColumns.splice(0, 1);
+  loadButtonEvent() {
+    this.selectedData = [];
+    this.checkAll = false;
+    this.dataSource = [];
+
+    this.loading = true;
+    this.countData().then((result) => {
+      if (result) {
+        this.loadData();
+      }
+    });
+  }
+
+  onPageSizeChange(event: any) {
+    this.pageNumber = Math.floor(event.first / event.rows) + 1;
+    this.pageSize = event.rows;
+  }
+
+  loadData() {
+    var progress = 0;
+    const lastPageNumber = Math.ceil(this.totalRecords / this.pageSize);
+    for (let i = this.pageNumber; i <= lastPageNumber; i++) {
+      this.networkService
+        .get(Constants.UrlEndpoint.priceEndpoint + "/POSData/" + i + "/" + this.pageSize)
+        .subscribe({
+          next: (response) => {
+            for (const data of response) {
+              this.dataSource.push(data);
+            }
+
+            progress += 1;
+            this.updateProgressValue(progress, lastPageNumber);
+
+            console.log("last page :", lastPageNumber);
+            console.log("data Source :", this.dataSource.length);
+            console.log("total Records :", this.totalRecords);
+            if (this.dataSource.length === this.totalRecords) {
+              this.loading = false;
+              this.isButtonDisabled();
+              this.progressValue = 0;
+            }
+          },
+          error: (error) => {
+            progress += 1;
+            this.updateProgressValue(progress, lastPageNumber);
+            if (this.dataSource.length === this.totalRecords) {
+              this.loading = false;
+              this.isButtonDisabled();
+              this.progressValue = 0;
+            }
+            this.messageService.add({
+              severity: "error",
+              summary: "Error " + error.status,
+              detail: error.statusText,
+              life: 4000,
+            });
+          },
+        });
     }
   }
 
-  isAllSelected() {
-    const numSelected = this.selectedData.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
+  updateProgressValue(currentPage: number, lastPageNumber: number): void {
+    const progress = (currentPage / lastPageNumber) * 100;
+    this.progressValue = parseFloat(progress.toFixed(2));
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  toggleAllRows() {
-    this.isAllSelected()
-      ? this.selectedData.clear()
-      : this.dataSource.data.forEach((row) => this.selectedData.select(row));
+  private countData(): Promise<boolean> {
+    return new Promise((resolve) => {
+      this.networkService.get(Constants.UrlEndpoint.priceEndpoint + "/POSData/Count").subscribe({
+        next: (response) => {
+          this.totalRecords = response;
+          resolve(true);
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: "error",
+            summary: "Error " + error.status,
+            detail: error.statusText,
+            life: 4000,
+          });
+          resolve(false);
+        },
+      });
+    });
   }
 
-  toggleRow(event: any, row: any) {
-    event ? this.selectedData.toggle(row) : null;
+  isButtonDisabled() {
+    if (this.dataSource.length <= 0) {
+      this.buttonDisabled = true;
+    } else {
+      if (this.useCheckbox) {
+        if (this.selectedData.length <= 0) {
+          this.buttonDisabled = true;
+        } else {
+          this.buttonDisabled = false;
+        }
+      } else {
+        this.buttonDisabled = false;
+      }
+    }
+  }
+
+  selectAllChange(event: any) {
+    const checked = event.checked;
+
+    if (checked) {
+      this.selectedData = this.dataSource;
+      this.checkAll = true;
+    } else {
+      this.selectedData = [];
+      this.checkAll = false;
+    }
+    this.isButtonDisabled();
+  }
+
+  selectChange() {
+    this.isButtonDisabled();
+  }
+
+  checkBoxChange() {
+    this.isButtonDisabled();
+  }
+
+  confirmDialog() {
+    var message = "Are you sure want to process All Data?";
+    if (this.useCheckbox)
+      message = "Are you sure want to process " + this.selectedData.length + " Data?";
+
+    this.confirmationService.confirm({
+      dismissableMask: true,
+      closeOnEscape: true,
+      message: message,
+      accept: () => {
+        this.loading = true;
+        this.submit();
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Rejected",
+          detail: "You have rejected",
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  async submit() {
+    var progress = -1;
+    const batchSize = 100;
+    const data = this.useCheckbox ? this.selectedData : this.dataSource;
+    const totalBatch = Math.ceil(data.length / batchSize);
+
+    for (let i = 0; i < totalBatch; i++) {
+      const batchData = data.slice(i * batchSize, (i + 1) * batchSize);
+
+      this.networkService.post(Constants.UrlEndpoint.priceEndpoint, batchData).subscribe({
+        next: (response) => {
+          setTimeout(async () => {
+            progress += 1;
+            this.updateProgressValue(progress, totalBatch);
+            if (i === totalBatch - 1) {
+              this.messageService.add({
+                severity: "success",
+                summary: "Success",
+                detail: "Submit Success",
+                life: 3000,
+              });
+              if (i === totalBatch - 1) this.loading = false;
+            }
+          }, 100);
+        },
+        error: (error) => {
+          setTimeout(async () => {
+            progress += 1;
+            this.updateProgressValue(progress, totalBatch);
+            this.messageService.add({
+              severity: "error",
+              summary: "Error " + error.status,
+              detail: error.error.detail,
+              life: 4000,
+            });
+            if (i === totalBatch - 1) this.loading = false;
+          }, 400);
+        },
+      });
+    }
   }
 }
 

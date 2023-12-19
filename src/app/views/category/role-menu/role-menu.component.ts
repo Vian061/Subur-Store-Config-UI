@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ButtonModule } from "primeng/button";
 import { InputSwitchModule } from "primeng/inputswitch";
@@ -14,10 +14,10 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
 
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { UoMGroupModel } from "../../../models/uom-group-model";
+import { CustomerModel } from "../../../models/customer-model";
 
 @Component({
-  selector: "app-uom-group",
+  selector: "app-role-menu",
   standalone: true,
   imports: [
     CommonModule,
@@ -33,10 +33,10 @@ import { UoMGroupModel } from "../../../models/uom-group-model";
     ProgressSpinnerModule,
   ],
   providers: [ConfirmationService, MessageService],
-  templateUrl: "./uom-group.component.html",
-  styleUrl: "./uom-group.component.scss",
+  templateUrl: "./role-menu.component.html",
+  styleUrl: "./role-menu.component.scss",
 })
-export class UomGroupComponent {
+export class RoleMenuComponent {
   useCheckbox: boolean = false;
   checkAll: boolean = false;
   buttonDisabled: boolean = false;
@@ -46,8 +46,8 @@ export class UomGroupComponent {
   totalRecords: number = 0;
   progressValue: number = 0;
 
-  dataSource: UoMGroupModel[] = [];
-  selectedData: UoMGroupModel[] = [];
+  dataSource: CustomerModel[] = [];
+  selectedData: CustomerModel[] = [];
 
   constructor(
     private networkService: NetworkService,
@@ -80,9 +80,10 @@ export class UomGroupComponent {
     const lastPageNumber = Math.ceil(this.totalRecords / this.pageSize);
     for (let i = this.pageNumber; i <= lastPageNumber; i++) {
       this.networkService
-        .get(Constants.UrlEndpoint.uomGroupEndpoint + "/POSData/" + i + "/" + this.pageSize)
+        .get(Constants.UrlEndpoint.roleMenuEndpoint + "/POSData/" + i + "/" + this.pageSize)
         .subscribe({
           next: (response) => {
+            console.log("data -%d : %d", i, response);
             for (const data of response) {
               this.dataSource.push(data);
             }
@@ -122,7 +123,7 @@ export class UomGroupComponent {
 
   private countData(): Promise<boolean> {
     return new Promise((resolve) => {
-      this.networkService.get(Constants.UrlEndpoint.uomGroupEndpoint + "/POSData/Count").subscribe({
+      this.networkService.get(Constants.UrlEndpoint.roleMenuEndpoint + "/POSData/Count").subscribe({
         next: (response) => {
           this.totalRecords = response;
           resolve(true);
@@ -131,7 +132,7 @@ export class UomGroupComponent {
           this.messageService.add({
             severity: "error",
             summary: "Error " + error.status,
-            detail: error.statusText,
+            detail: error.erorr.detail,
             life: 4000,
           });
           resolve(false);
@@ -210,7 +211,7 @@ export class UomGroupComponent {
     for (let i = 0; i < totalBatch; i++) {
       const batchData = data.slice(i * batchSize, (i + 1) * batchSize);
 
-      this.networkService.post(Constants.UrlEndpoint.uomGroupEndpoint, batchData).subscribe({
+      this.networkService.post(Constants.UrlEndpoint.roleMenuEndpoint, batchData).subscribe({
         next: (response) => {
           setTimeout(async () => {
             progress += 1;
@@ -243,29 +244,3 @@ export class UomGroupComponent {
     }
   }
 }
-
-const DATA: UoMGroupModel[] = [
-  {
-    code: "ABC",
-    description: "Example UoM Group",
-    details: [
-      {
-        alternateUoMModel: {
-          code: "UOM002",
-          description: "Sample Unit of Measure 2",
-          sortBy: 2,
-          isPutExtraFlagInReport: true,
-        },
-        alternateQuantity: 5,
-        baseUoMModel: {
-          code: "UOM001",
-          description: "Sample Unit of Measure 1",
-          sortBy: 1,
-          isPutExtraFlagInReport: true,
-        },
-        baseQuantity: 1,
-        uoMPackage: "Example Package",
-      },
-    ],
-  },
-];

@@ -1,134 +1,115 @@
-<div class="container-fluid">
+<div class="card flex justify-content-center flex-column p-3">
   <h1>Product</h1>
 
-  <p>Product Data from Subur Database</p>
+  <p>Product data from Subur Database</p>
 
-  <div class="d-flex flex-row align-items-center">
-    <mat-form-field>
-      <mat-label>Source Branch</mat-label>
-      <mat-select [(value)]="selectedBranch">
-        <mat-option>None</mat-option>
-        <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field class="ms-3">
-      <mat-label>Destination Branch</mat-label>
-      <mat-select [(value)]="branchDestination">
-        <mat-option>None</mat-option>
-        <mat-option value="item" *ngFor="let item of branchList">{{ item.value }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button
-      mat-raised-button
-      color="primary"
-      style="margin-bottom: 22px"
-      class="ms-3"
-      [disabled]="selectedBranch == null || branchDestination == null">
-      Submit
-    </button>
+  <div class="d-flex flex-row align-items-center mb-2">
+    <p-button
+      label="Load Data"
+      [disabled]="loading"
+      (onClick)="loadButtonEvent()"
+      severity="success"
+      class="me-2"></p-button>
+    <p-toast></p-toast>
+    <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+    <p-button label="Submit" (onClick)="confirmDialog()" [disabled]="buttonDisabled"></p-button>
   </div>
 
-  <mat-slide-toggle class="mb-4" [(ngModel)]="useCheckbox" (change)="onSlideChange()"
-    >Use Checkbox ?</mat-slide-toggle
-  >
+  <div class="flex flex-row align-items-center mb-2">
+    <p-inputSwitch
+      [(ngModel)]="useCheckbox"
+      (onChange)="checkBoxChange()"
+      ariaLabelledBy="chckbox"
+      class="d-flex"></p-inputSwitch>
+    <label class="ms-2" id="chckbox">Use Checkbox?</label>
+  </div>
 
-  <div class="mat-elevation-z3">
-    <table mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef style="width: 50px">
-          <mat-checkbox
-            (change)="$event ? toggleAllRows() : null"
-            [checked]="selectedData.hasValue() && isAllSelected()"
-            [indeterminate]="selectedData.hasValue() && !isAllSelected()">
-          </mat-checkbox>
+  <div
+    *ngIf="loading"
+    class="p-3 mb-3"
+    [ngStyle]="{
+      backgroundColor: 'var(--highlight-bg)',
+      color: 'var(--highlight-text-color)',
+      borderRadius: 'var(--border-radius)',
+    }">
+    loading...
+    <p-progressBar [value]="progressValue"></p-progressBar>
+  </div>
+  <p-table
+    [loading]="loading"
+    [value]="dataSource"
+    [(selection)]="selectedData"
+    (selectAllChange)="selectAllChange($event)"
+    (selectionChange)="selectChange()"
+    [selectAll]="checkAll"
+    dataKey="code"
+    [paginator]="true"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [totalRecords]="totalRecords"
+    [(rows)]="pageSize"
+    (onPage)="onPageSizeChange($event)"
+    [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem" *ngIf="useCheckbox">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox
-            (click)="$event.stopPropagation()"
-            (change)="toggleRow($event, row)"
-            [checked]="selectedData.isSelected(row)">
-          </mat-checkbox>
+        <th>Product Code</th>
+        <th>Product Name</th>
+        <th>Manufacturer</th>
+        <th>Tax Count</th>
+        <th>Brand</th>
+        <th>Item Group 1</th>
+        <th>Item Group 2</th>
+        <th>Inactive</th>
+        <th>In Opname</th>
+        <th>Barcode 1</th>
+        <th>Barcode 2</th>
+        <th>Barcode 3</th>
+        <th>Barcode 4</th>
+        <th>Nominal Point</th>
+        <th>Calculate Price</th>
+        <th>For Salesman Web</th>
+        <th>For B2C</th>
+        <th>Inventory Item</th>
+        <th>Sales Item</th>
+        <th>Purchase Item</th>
+        <th>Base Price</th>
+        <th>Item Group</th>
+        <th>UoM Group</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td *ngIf="useCheckbox">
+          <p-tableCheckbox [value]="product"></p-tableCheckbox>
         </td>
-      </ng-container>
-
-      <ng-container matColumnDef="code">
-        <th mat-header-cell *matHeaderCellDef>Code</th>
-        <td mat-cell *matCellDef="let element">{{ element.code }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="basePrice">
-        <th mat-header-cell *matHeaderCellDef>Base Price</th>
-        <td mat-cell *matCellDef="let element">{{ element.basePrice }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="brand">
-        <th mat-header-cell *matHeaderCellDef>Brand</th>
-        <td mat-cell *matCellDef="let element">{{ element.brand }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="manufacturer">
-        <th mat-header-cell *matHeaderCellDef>Manufacturer</th>
-        <td mat-cell *matCellDef="let element">{{ element.manufacturer.description }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="nominalPoint">
-        <th mat-header-cell *matHeaderCellDef>Nominal Point</th>
-        <td mat-cell *matCellDef="let element">{{ element.nominalPoint }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="isCalculatePrice">
-        <th mat-header-cell *matHeaderCellDef>Calculate Price</th>
-        <td mat-cell *matCellDef="let element">{{ element.isCalculatePrice }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="isForSalesmanWeb">
-        <th mat-header-cell *matHeaderCellDef>For Salesman Web</th>
-        <td mat-cell *matCellDef="let element">{{ element.isForSalesmanWeb }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="isForB2C">
-        <th mat-header-cell *matHeaderCellDef>For B2C</th>
-        <td mat-cell *matCellDef="let element">{{ element.isForB2C }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="isPurchaseItem">
-        <th mat-header-cell *matHeaderCellDef>Purchase Item</th>
-        <td mat-cell *matCellDef="let element">{{ element.isPurchaseItem }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="isInactive">
-        <th mat-header-cell *matHeaderCellDef>In Active</th>
-        <td mat-cell *matCellDef="let element">{{ element.isInactive }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="isInOpname">
-        <th mat-header-cell *matHeaderCellDef>In Opname</th>
-        <td mat-cell *matCellDef="let element">{{ element.isInOpname }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="itemGroupModel">
-        <th mat-header-cell *matHeaderCellDef>Item Group</th>
-        <td mat-cell *matCellDef="let element">{{ element.itemGroupModel.description }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="uoMGroupModel">
-        <th mat-header-cell *matHeaderCellDef>UoM Group</th>
-        <td mat-cell *matCellDef="let element">{{ element.uoMGroupModel.description }}</td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-
-    <mat-paginator
-      [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons
-      aria-label="Select page of periodic elements">
-    </mat-paginator>
-  </div>
+        <td>{{ product.code }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.manufacturer?.description }}</td>
+        <td>{{ product.isTaxCount }}</td>
+        <td>{{ product.brand }}</td>
+        <td>{{ product.itemGroup1 }}</td>
+        <td>{{ product.itemGroup2 }}</td>
+        <td>{{ product.isInactive }}</td>
+        <td>{{ product.isInOpname }}</td>
+        <td>{{ product.barcode }}</td>
+        <td>{{ product.barcode2 }}</td>
+        <td>{{ product.barcode3 }}</td>
+        <td>{{ product.barcode4 }}</td>
+        <td>{{ product.nominalPoint }}</td>
+        <td>{{ product.isCalculatePrice }}</td>
+        <td>{{ product.isForSalesmanWeb }}</td>
+        <td>{{ product.isForB2C }}</td>
+        <td>{{ product.isInventoryItem }}</td>
+        <td>{{ product.isSalesItem }}</td>
+        <td>{{ product.isPurchaseItem }}</td>
+        <td>{{ product.basePrice }}</td>
+        <td>{{ product.itemGroupModel?.description }}</td>
+        <td>{{ product.uoMGroupModel?.description }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>

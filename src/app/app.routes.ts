@@ -19,6 +19,7 @@ import { WarehouseBinComponent } from "./views/category/warehouse-bin/warehouse-
 import { LoginComponent } from "./views/login/login.component";
 import { AuthGuard } from "./services/auth-guard";
 import { BpGroupComponent } from "./views/category/bp-group/bp-group.component";
+import { RoleMenuComponent } from "./views/category/role-menu/role-menu.component";
 
 export const routes: Routes = [
   { path: "", canActivate: [AuthGuard], component: DashboardComponent },
@@ -36,6 +37,7 @@ export const routes: Routes = [
   { path: "Price", canActivate: [AuthGuard], component: PriceComponent },
   { path: "Product", canActivate: [AuthGuard], component: ProductComponent },
   { path: "Role", canActivate: [AuthGuard], component: RoleComponent },
+  { path: "Role-Menu", canActivate: [AuthGuard], component: RoleMenuComponent },
   { path: "UoM", canActivate: [AuthGuard], component: UomComponent },
   { path: "UoM-Group", canActivate: [AuthGuard], component: UomGroupComponent },
   { path: "Warehouse", canActivate: [AuthGuard], component: WarehouseComponent },

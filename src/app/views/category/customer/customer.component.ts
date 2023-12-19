@@ -11,7 +11,6 @@ import { FormsModule } from "@angular/forms";
 import { Constants } from "../../../constants";
 import { ProgressBarModule } from "primeng/progressbar";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
-import { MessagesModule } from "primeng/messages";
 
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
@@ -77,6 +76,7 @@ export class CustomerComponent {
   }
 
   loadData() {
+    var progress = 0;
     const lastPageNumber = Math.ceil(this.totalRecords / this.pageSize);
     for (let i = this.pageNumber; i <= lastPageNumber; i++) {
       this.networkService
@@ -87,7 +87,8 @@ export class CustomerComponent {
               this.dataSource.push(data);
             }
 
-            this.updateProgressValue(i, lastPageNumber);
+            progress += 1;
+            this.updateProgressValue(progress, lastPageNumber);
 
             if (this.dataSource.length === this.totalRecords) {
               this.loading = false;
@@ -96,6 +97,13 @@ export class CustomerComponent {
             }
           },
           error: (error) => {
+            progress += 1;
+            this.updateProgressValue(progress, lastPageNumber);
+            if (this.dataSource.length === this.totalRecords) {
+              this.loading = false;
+              this.isButtonDisabled();
+              this.progressValue = 0;
+            }
             this.messageService.add({
               severity: "error",
               summary: "Error " + error.status,
@@ -193,7 +201,8 @@ export class CustomerComponent {
     });
   }
 
-  submit() {
+  async submit() {
+    var progress = -1;
     const batchSize = 100;
     const data = this.useCheckbox ? this.selectedData : this.dataSource;
     const totalBatch = Math.ceil(data.length / batchSize);
@@ -201,27 +210,34 @@ export class CustomerComponent {
     for (let i = 0; i < totalBatch; i++) {
       const batchData = data.slice(i * batchSize, (i + 1) * batchSize);
 
-      this.updateProgressValue(i, totalBatch);
-
       this.networkService.post(Constants.UrlEndpoint.customerEndpoint, batchData).subscribe({
         next: (response) => {
-          if (i === totalBatch - 1) {
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Submit Success",
-              life: 3000,
-            });
-          }
+          setTimeout(async () => {
+            progress += 1;
+            this.updateProgressValue(progress, totalBatch);
+            if (i === totalBatch - 1) {
+              this.messageService.add({
+                severity: "success",
+                summary: "Success",
+                detail: "Submit Success",
+                life: 3000,
+              });
+              if (i === totalBatch - 1) this.loading = false;
+            }
+          }, 100);
         },
         error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
+          setTimeout(async () => {
+            progress += 1;
+            this.updateProgressValue(progress, totalBatch);
+            this.messageService.add({
+              severity: "error",
+              summary: "Error " + error.status,
+              detail: error.error.detail,
+              life: 4000,
+            });
+            if (i === totalBatch - 1) this.loading = false;
+          }, 100);
         },
       });
     }

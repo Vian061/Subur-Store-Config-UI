@@ -69,6 +69,12 @@ export class Constants {
       redirectUri: "/Product",
     },
     {
+      icon: "widgets",
+      title: "Role Menu",
+      description: "Sync Role Menu Configuration to a branch",
+      redirectUri: "/Role-Menu",
+    },
+    {
       icon: "manage_accounts",
       title: "Role",
       description: "Sync Role Configuration to a branch",
@@ -106,6 +112,7 @@ export class Constants {
     // static apiEndpoint: string = "http://192.168.1.15:44350/";
     // static apiV1: string = this.apiEndpoint + "api/v1/";
     static apiV1: string = "api/v1/";
+    static apiV2: string = "api/v2/";
 
     static areaEndpoint: string = this.apiV1 + "Areas";
     static bankEndpoint: string = this.apiV1 + "Banks";
@@ -115,6 +122,15 @@ export class Constants {
     static itemGroupEndpoint: string = this.apiV1 + "ItemGroups";
     static journalAccountEndpoint: string = this.apiV1 + "JournalAccounts";
     static manufacturerEndpoint: string = this.apiV1 + "Manufacturers";
+    static menuEndpoint: string = this.apiV1 + "Menus";
+    static priceEndpoint: string = this.apiV1 + "Prices";
+    static productEndpoint: string = this.apiV1 + "Products";
+    static roleMenuEndpoint: string = this.apiV1 + "RoleMenus";
+    static roleEndpoint: string = this.apiV1 + "Roles";
+    static uomEndpoint: string = this.apiV1 + "UoMs";
+    static uomGroupEndpoint: string = this.apiV1 + "UoMGroups";
+    static warehouseEndpoint: string = this.apiV1 + "Warehouses";
+    static warehouseBinEndpoint: string = this.apiV1 + "WarehouseBins";
   };
 
   static is4Client: any = class {

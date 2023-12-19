@@ -1,15 +1,17 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { SelectionModel } from "@angular/cdk/collections";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatSelectModule } from "@angular/material/select";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatButtonModule } from "@angular/material/button";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { ButtonModule } from "primeng/button";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { TableModule } from "primeng/table";
+import { CardModule } from "primeng/card";
+import { DialogModule } from "primeng/dialog";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { ToastModule } from "primeng/toast";
 import { FormsModule } from "@angular/forms";
-import { DropDownMenu } from "../../../models/ui-models/drop-down-menu";
+import { Constants } from "../../../constants";
+
+import { NetworkService } from "../../../services/network.service";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { RoleModel } from "../../../models/role-model";
 
 @Component({
@@ -17,63 +19,137 @@ import { RoleModel } from "../../../models/role-model";
   standalone: true,
   imports: [
     CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatSlideToggleModule,
     FormsModule,
+    ButtonModule,
+    InputSwitchModule,
+    TableModule,
+    CardModule,
+    ConfirmDialogModule,
+    DialogModule,
+    ToastModule,
   ],
+  providers: [ConfirmationService, MessageService],
   templateUrl: "./role.component.html",
   styleUrl: "./role.component.scss",
 })
 export class RoleComponent {
   useCheckbox: boolean = false;
-  branchList: DropDownMenu[] = [
-    { key: "cfr", value: "Cifor" },
-    { key: "cld", value: "Cilendek" },
-    { key: "ats", value: "Toko Atas" },
-  ];
+  checkAll: boolean = false;
+  buttonDisabled: boolean = false;
+  loading: boolean = false;
+  pageNumber: number = 1;
+  pageSize: number = 50;
 
-  selectedBranch?: DropDownMenu;
-  branchDestination?: DropDownMenu;
+  dataSource: RoleModel[] = [];
+  selectedData: RoleModel[] = [];
 
-  displayedColumns: string[] = ["name"];
-  dataSource = new MatTableDataSource<RoleModel>(DATA);
-  selectedData = new SelectionModel<RoleModel>(true, []);
-
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    if (this.useCheckbox) this.displayedColumns.unshift("select");
+  constructor(
+    private networkService: NetworkService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {
+    this.isButtonDisabled();
   }
 
-  onSlideChange() {
-    if (this.useCheckbox) {
-      this.displayedColumns.unshift("select");
+  onPageChange(event: any) {
+    console.log(event);
+  }
+
+  loadData() {
+    this.loading = true;
+    this.checkAll = false;
+    this.selectedData = [];
+    this.networkService.get(Constants.UrlEndpoint.roleEndpoint + "/POSData").subscribe({
+      next: (response) => {
+        this.dataSource = response;
+        this.isButtonDisabled();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.log(error);
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: error.statusText,
+          life: 4000,
+        });
+        this.loading = false;
+      },
+    });
+  }
+
+  isButtonDisabled() {
+    if (this.dataSource.length <= 0) {
+      this.buttonDisabled = true;
     } else {
-      this.displayedColumns.splice(0, 1);
+      if (this.useCheckbox) {
+        if (this.selectedData.length <= 0) {
+          this.buttonDisabled = true;
+        } else {
+          this.buttonDisabled = false;
+        }
+      } else {
+        this.buttonDisabled = false;
+      }
     }
   }
 
-  isAllSelected() {
-    const numSelected = this.selectedData.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected == numRows;
+  selectAllChange() {
+    this.isButtonDisabled();
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  toggleAllRows() {
-    this.isAllSelected()
-      ? this.selectedData.clear()
-      : this.dataSource.data.forEach((row) => this.selectedData.select(row));
+  selectChange() {
+    this.isButtonDisabled();
   }
 
-  toggleRow(event: any, row: any) {
-    event ? this.selectedData.toggle(row) : null;
+  checkBoxChange() {
+    this.isButtonDisabled();
+  }
+
+  confirmDialog() {
+    var message = "Are you sure want to process All Data?";
+    if (this.useCheckbox)
+      message = "Are you sure want to process " + this.selectedData.length + " Data?";
+
+    this.confirmationService.confirm({
+      dismissableMask: true,
+      closeOnEscape: true,
+      message: message,
+      accept: () => {
+        this.submit();
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Rejected",
+          detail: "You have rejected",
+          life: 3000,
+        });
+      },
+    });
+  }
+
+  submit() {
+    const data = this.useCheckbox ? this.selectedData : this.dataSource;
+
+    this.networkService.post(Constants.UrlEndpoint.roleEndpoint, data).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Submit Success",
+          life: 3000,
+        });
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: error.statusText,
+          life: 4000,
+        });
+      },
+    });
   }
 }
 

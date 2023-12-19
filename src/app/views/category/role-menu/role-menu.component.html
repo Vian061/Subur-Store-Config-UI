@@ -1,0 +1,133 @@
+<div class="card flex justify-content-center flex-column p-3">
+  <h1>Role Menu</h1>
+
+  <p>Role Menu data from Subur Database</p>
+
+  <div class="d-flex flex-row align-items-center mb-2">
+    <p-button
+      label="Load Data"
+      [disabled]="loading"
+      (onClick)="loadButtonEvent()"
+      severity="success"
+      class="me-2"></p-button>
+    <p-toast></p-toast>
+    <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+    <p-button label="Submit" (onClick)="confirmDialog()" [disabled]="buttonDisabled"></p-button>
+  </div>
+
+  <div class="flex flex-row align-items-center mb-2">
+    <p-inputSwitch
+      [(ngModel)]="useCheckbox"
+      (onChange)="checkBoxChange()"
+      ariaLabelledBy="chckbox"
+      class="d-flex"></p-inputSwitch>
+    <label class="ms-2" id="chckbox">Use Checkbox?</label>
+  </div>
+
+  <div
+    *ngIf="loading"
+    class="p-3 mb-3"
+    [ngStyle]="{
+        backgroundColor: 'var(--highlight-bg)',
+        color: 'var(--highlight-text-color)',
+        borderRadius: 'var(--border-radius)',
+      }">
+    loading...
+    <p-progressBar [value]="progressValue"></p-progressBar>
+  </div>
+  <p-table
+    [loading]="loading"
+    [value]="dataSource"
+    [(selection)]="selectedData"
+    (selectAllChange)="selectAllChange($event)"
+    (selectionChange)="selectChange()"
+    [selectAll]="checkAll"
+    dataKey="code"
+    [paginator]="true"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [totalRecords]="totalRecords"
+    [(rows)]="pageSize"
+    (onPage)="onPageSizeChange($event)"
+    [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem" *ngIf="useCheckbox">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Salt</th>
+        <th>PIN</th>
+        <th>Email</th>
+        <th>Outstanding Bills</th>
+        <th>Payment Day</th>
+        <th>Limit Type</th>
+        <th style="min-width: 150px">NIK</th>
+        <th>Display Membership</th>
+        <th>Bar Code</th>
+        <th>Delivery Days</th>
+        <th>Fees Rokok</th>
+        <th>Fees non Rokok</th>
+        <th style="min-width: 150px">Salesman NIK</th>
+        <th>Balance</th>
+        <th>Point Reward</th>
+        <th>PIC</th>
+        <th>Phone</th>
+        <th>Fax</th>
+        <th style="max-width: 160px">Mobile</th>
+        <th>Area</th>
+        <th>Adresses</th>
+        <th>BP Group</th>
+        <th>Credit Limit</th>
+        <th>Tax Count</th>
+        <th>Overall Point Reward</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Accuracy</th>
+        <th>Birth Date</th>
+        <th>Transport Type</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-customer>
+      <tr>
+        <td *ngIf="useCheckbox">
+          <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+        </td>
+        <td>{{ customer.code }}</td>
+        <td>{{ customer.name }}</td>
+        <td>{{ customer.salt }}</td>
+        <td>{{ customer.pin }}</td>
+        <td>{{ customer.emailAddress }}</td>
+        <td>{{ customer.outstandingBills }}</td>
+        <td>{{ customer.paymentDays }}</td>
+        <td>{{ customer.limitType }}</td>
+        <td>{{ customer.nik }}</td>
+        <td>{{ customer.displayMembership }}</td>
+        <td>{{ customer.membershipBarcode }}</td>
+        <td>{{ customer.deliveryDays }}</td>
+        <td>{{ customer.feesRokok }}</td>
+        <td>{{ customer.feesNonRokok }}</td>
+        <td>{{ customer.salesmanNIK }}</td>
+        <td>{{ customer.balance }}</td>
+        <td>{{ customer.pointReward }}</td>
+        <td>{{ customer.pic }}</td>
+        <td>{{ customer.phone }}</td>
+        <td>{{ customer.fax }}</td>
+        <td>{{ customer.mobile }}</td>
+        <td>{{ customer?.area?.description }}</td>
+        <td>{{ customer.addresses }}</td>
+        <td>{{ customer?.bpGroup?.description }}</td>
+        <td>{{ customer.creditLimit }}</td>
+        <td>{{ customer.isTaxCount }}</td>
+        <td>{{ customer.overallPointReward }}</td>
+        <td>{{ customer.latitude }}</td>
+        <td>{{ customer.longitude }}</td>
+        <td>{{ customer.accuracy }}</td>
+        <td>{{ customer.birthDate }}</td>
+        <td>{{ customer.transportType }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
