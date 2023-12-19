@@ -58,36 +58,6 @@
         </th>
         <th>Code</th>
         <th>Name</th>
-        <th>Salt</th>
-        <th>PIN</th>
-        <th>Email</th>
-        <th>Outstanding Bills</th>
-        <th>Payment Day</th>
-        <th>Limit Type</th>
-        <th style="min-width: 150px">NIK</th>
-        <th>Display Membership</th>
-        <th>Bar Code</th>
-        <th>Delivery Days</th>
-        <th>Fees Rokok</th>
-        <th>Fees non Rokok</th>
-        <th style="min-width: 150px">Salesman NIK</th>
-        <th>Balance</th>
-        <th>Point Reward</th>
-        <th>PIC</th>
-        <th>Phone</th>
-        <th>Fax</th>
-        <th style="max-width: 160px">Mobile</th>
-        <th>Area</th>
-        <th>Adresses</th>
-        <th>BP Group</th>
-        <th>Credit Limit</th>
-        <th>Tax Count</th>
-        <th>Overall Point Reward</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Accuracy</th>
-        <th>Birth Date</th>
-        <th>Transport Type</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-customer>
@@ -95,38 +65,8 @@
         <td *ngIf="useCheckbox">
           <p-tableCheckbox [value]="customer"></p-tableCheckbox>
         </td>
-        <td>{{ customer.code }}</td>
-        <td>{{ customer.name }}</td>
-        <td>{{ customer.salt }}</td>
-        <td>{{ customer.pin }}</td>
-        <td>{{ customer.emailAddress }}</td>
-        <td>{{ customer.outstandingBills }}</td>
-        <td>{{ customer.paymentDays }}</td>
-        <td>{{ customer.limitType }}</td>
-        <td>{{ customer.nik }}</td>
-        <td>{{ customer.displayMembership }}</td>
-        <td>{{ customer.membershipBarcode }}</td>
-        <td>{{ customer.deliveryDays }}</td>
-        <td>{{ customer.feesRokok }}</td>
-        <td>{{ customer.feesNonRokok }}</td>
-        <td>{{ customer.salesmanNIK }}</td>
-        <td>{{ customer.balance }}</td>
-        <td>{{ customer.pointReward }}</td>
-        <td>{{ customer.pic }}</td>
-        <td>{{ customer.phone }}</td>
-        <td>{{ customer.fax }}</td>
-        <td>{{ customer.mobile }}</td>
-        <td>{{ customer?.area?.description }}</td>
-        <td>{{ customer.addresses }}</td>
-        <td>{{ customer?.bpGroup?.description }}</td>
-        <td>{{ customer.creditLimit }}</td>
-        <td>{{ customer.isTaxCount }}</td>
-        <td>{{ customer.overallPointReward }}</td>
-        <td>{{ customer.latitude }}</td>
-        <td>{{ customer.longitude }}</td>
-        <td>{{ customer.accuracy }}</td>
-        <td>{{ customer.birthDate }}</td>
-        <td>{{ customer.transportType }}</td>
+        <td>{{ customer.role.name }}</td>
+        <td>{{ customer.menu.description }}</td>
       </tr>
     </ng-template>
   </p-table>

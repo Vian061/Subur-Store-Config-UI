@@ -14,7 +14,7 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
 
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
-import { CustomerModel } from "../../../models/customer-model";
+import { RoleMenuModel } from "../../../models/role-menu-model";
 
 @Component({
   selector: "app-role-menu",
@@ -46,8 +46,8 @@ export class RoleMenuComponent {
   totalRecords: number = 0;
   progressValue: number = 0;
 
-  dataSource: CustomerModel[] = [];
-  selectedData: CustomerModel[] = [];
+  dataSource: RoleMenuModel[] = [];
+  selectedData: RoleMenuModel[] = [];
 
   constructor(
     private networkService: NetworkService,
@@ -83,7 +83,6 @@ export class RoleMenuComponent {
         .get(Constants.UrlEndpoint.roleMenuEndpoint + "/POSData/" + i + "/" + this.pageSize)
         .subscribe({
           next: (response) => {
-            console.log("data -%d : %d", i, response);
             for (const data of response) {
               this.dataSource.push(data);
             }

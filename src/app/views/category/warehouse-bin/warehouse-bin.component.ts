@@ -62,6 +62,7 @@ export class WarehouseBinComponent {
     this.selectedData = [];
     this.networkService.get(Constants.UrlEndpoint.warehouseBinEndpoint + "/POSData").subscribe({
       next: (response) => {
+        console.log(response);
         this.dataSource = response;
         this.isButtonDisabled();
         this.loading = false;
