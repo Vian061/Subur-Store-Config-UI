@@ -7,6 +7,18 @@ $secondary-color: rgb(255, 141, 141);
 $background-color: rgb(239 239 239);
 $scroll-bar-width: 8px;
 
+.search-icon-container {
+  background: $secondary-color;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  color: white;
+}
+
+.search-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
 .d-flex {
   display: flex !important;
 }

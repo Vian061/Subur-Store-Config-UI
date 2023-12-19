@@ -36,6 +36,7 @@
     <p-progressBar [value]="progressValue"></p-progressBar>
   </div>
   <p-table
+    #dt1
     [loading]="loading"
     [value]="dataSource"
     [(selection)]="selectedData"
@@ -50,7 +51,22 @@
     [totalRecords]="totalRecords"
     [(rows)]="pageSize"
     (onPage)="onPageSizeChange($event)"
-    [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]">
+    [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]"
+    [globalFilterFields]="['code', 'description', 'details.uoMPackage']">
+    <ng-template pTemplate="caption">
+      <div class="flex justify-content-end">
+        <span class="material-symbols-outlined flex align-items-center search-icon-container px-2">
+          search
+        </span>
+        <input
+          class="search-input"
+          pInputText
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="dt1.filterGlobal(searchText, 'contains')"
+          placeholder="Search keyword" />
+      </div>
+    </ng-template>
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem" *ngIf="useCheckbox">
@@ -61,14 +77,14 @@
         <th>Details</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-customer>
+    <ng-template pTemplate="body" let-uomGruop>
       <tr>
         <td *ngIf="useCheckbox">
-          <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+          <p-tableCheckbox [value]="uomGruop"></p-tableCheckbox>
         </td>
-        <td>{{ customer.code }}</td>
-        <td>{{ customer.description }}</td>
-        <td>{{ customer.details }}</td>
+        <td>{{ uomGruop.code }}</td>
+        <td>{{ uomGruop.description }}</td>
+        <td>{{ uomGruop.details }}</td>
       </tr>
     </ng-template>
   </p-table>

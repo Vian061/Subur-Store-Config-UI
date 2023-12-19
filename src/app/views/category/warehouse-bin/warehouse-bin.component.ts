@@ -14,6 +14,7 @@ import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { WarehouseModel } from "../../../models/warehouse-model";
 import { WarehouseBinModel } from "../../../models/warehouse-bin-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-warehouse-bin",
@@ -28,6 +29,7 @@ import { WarehouseBinModel } from "../../../models/warehouse-bin-model";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./warehouse-bin.component.html",
@@ -43,6 +45,7 @@ export class WarehouseBinComponent {
 
   dataSource: WarehouseBinModel[] = [];
   selectedData: WarehouseBinModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

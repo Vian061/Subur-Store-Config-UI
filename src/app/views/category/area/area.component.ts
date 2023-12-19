@@ -10,6 +10,7 @@ import { CardModule } from "primeng/card";
 import { DialogModule } from "primeng/dialog";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 import { ToastModule } from "primeng/toast";
+import { InputTextModule } from "primeng/inputtext";
 
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
@@ -29,6 +30,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
 })
@@ -40,6 +42,7 @@ export class AreaComponent {
 
   dataSource: AreaModel[] = [];
   selectedData: AreaModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

@@ -1,3 +1,5 @@
+@import "../../../../styles.scss";
+
 h1 {
   font-weight: bold;
   padding-bottom: 10px;
@@ -7,4 +9,16 @@ h1 {
 
 .card {
   background: white;
+}
+
+.search-icon-container {
+  background: $secondary-color;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  color: white;
+}
+
+.search-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }

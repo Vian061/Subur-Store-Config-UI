@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { ManufacturerModel } from "../../../models/manufacturer-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-manufacturer",
@@ -27,6 +28,7 @@ import { ManufacturerModel } from "../../../models/manufacturer-model";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./manufacturer.component.html",
@@ -42,6 +44,7 @@ export class ManufacturerComponent {
 
   dataSource: ManufacturerModel[] = [];
   selectedData: ManufacturerModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

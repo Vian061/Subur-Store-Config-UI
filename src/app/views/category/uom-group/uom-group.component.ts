@@ -15,6 +15,7 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { UoMGroupModel } from "../../../models/uom-group-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-uom-group",
@@ -31,6 +32,7 @@ import { UoMGroupModel } from "../../../models/uom-group-model";
     ToastModule,
     ProgressBarModule,
     ProgressSpinnerModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./uom-group.component.html",
@@ -48,6 +50,7 @@ export class UomGroupComponent {
 
   dataSource: UoMGroupModel[] = [];
   selectedData: UoMGroupModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,
@@ -228,6 +231,8 @@ export class UomGroupComponent {
         },
         error: (error) => {
           setTimeout(async () => {
+            console.log(batchData);
+            console.log(error);
             progress += 1;
             this.updateProgressValue(progress, totalBatch);
             this.messageService.add({

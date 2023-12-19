@@ -15,6 +15,7 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { RoleMenuModel } from "../../../models/role-menu-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-role-menu",
@@ -31,6 +32,7 @@ import { RoleMenuModel } from "../../../models/role-menu-model";
     ToastModule,
     ProgressBarModule,
     ProgressSpinnerModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./role-menu.component.html",
@@ -48,6 +50,7 @@ export class RoleMenuComponent {
 
   dataSource: RoleMenuModel[] = [];
   selectedData: RoleMenuModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

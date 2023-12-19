@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
+import { InputTextModule } from "primeng/inputtext";
 @Component({
   selector: "app-item-group",
   standalone: true,
@@ -26,6 +27,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./item-group.component.html",
@@ -41,6 +43,7 @@ export class ItemGroupComponent {
 
   dataSource: ItemGroupModel[] = [];
   selectedData: ItemGroupModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

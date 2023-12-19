@@ -15,6 +15,7 @@ import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { ProudctModel } from "../../../models/product-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-product",
@@ -31,6 +32,7 @@ import { ProudctModel } from "../../../models/product-model";
     ToastModule,
     ProgressBarModule,
     ProgressSpinnerModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./product.component.html",
@@ -48,6 +50,7 @@ export class ProductComponent {
 
   dataSource: ProudctModel[] = [];
   selectedData: ProudctModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

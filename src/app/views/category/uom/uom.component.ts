@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { UoMModel } from "../../../models/uom-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-uom",
@@ -27,6 +28,7 @@ import { UoMModel } from "../../../models/uom-model";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./uom.component.html",
@@ -42,6 +44,7 @@ export class UomComponent {
 
   dataSource: UoMModel[] = [];
   selectedData: UoMModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

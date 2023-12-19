@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-branch",
@@ -29,6 +30,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
 })
@@ -40,6 +42,7 @@ export class BranchComponent {
 
   dataSource: BranchModel[] = [];
   selectedData: BranchModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

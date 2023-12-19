@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { RoleModel } from "../../../models/role-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-role",
@@ -27,6 +28,7 @@ import { RoleModel } from "../../../models/role-model";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./role.component.html",
@@ -42,6 +44,7 @@ export class RoleComponent {
 
   dataSource: RoleModel[] = [];
   selectedData: RoleModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

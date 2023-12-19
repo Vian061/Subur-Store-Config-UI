@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { WarehouseModel } from "../../../models/warehouse-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-warehouse",
@@ -27,6 +28,7 @@ import { WarehouseModel } from "../../../models/warehouse-model";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./warehouse.component.html",
@@ -42,6 +44,7 @@ export class WarehouseComponent {
 
   dataSource: WarehouseModel[] = [];
   selectedData: WarehouseModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

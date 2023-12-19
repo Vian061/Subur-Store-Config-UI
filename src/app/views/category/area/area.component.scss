@@ -1,14 +1,5 @@
 @import "../../../../styles.scss";
 
-.container-fluid {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  max-height: 95vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
 .card {
   background: white;
 }
@@ -20,37 +11,14 @@ h1 {
   border-bottom: 2px solid #bbb;
 }
 
-table tbody {
-  display: block;
-  // max-height: 205px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+.search-icon-container {
+  background: $secondary-color;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  color: white;
 }
 
-table thead,
-table tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-}
-
-table thead {
-  width: calc(100% - $scroll-bar-width);
-}
-
-@media only screen and (max-width: 768px) {
-  .branch-container {
-    flex-direction: column !important;
-  }
-  .branch {
-    padding-top: 10px;
-    margin: 0;
-  }
-
-  .btn {
-    padding: 10px;
-    margin: 0 !important;
-    margin-top: 10px !important;
-    width: 100%;
-  }
+.search-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }

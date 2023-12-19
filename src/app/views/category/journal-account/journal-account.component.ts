@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-journal-account",
@@ -27,6 +28,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./journal-account.component.html",
@@ -42,6 +44,7 @@ export class JournalAccountComponent {
 
   dataSource: JournalAccountModel[] = [];
   selectedData: JournalAccountModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

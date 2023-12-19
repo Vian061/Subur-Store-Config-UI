@@ -36,6 +36,7 @@
     <p-progressBar [value]="progressValue"></p-progressBar>
   </div>
   <p-table
+    #dt1
     [loading]="loading"
     [value]="dataSource"
     [(selection)]="selectedData"
@@ -46,11 +47,34 @@
     [paginator]="true"
     [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }"
+    [globalFilterFields]="[
+      'name',
+      'averagePrice',
+      'customPrice',
+      'validFrom',
+      'validTo',
+      'proudct',
+      'isActive'
+    ]"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [totalRecords]="totalRecords"
     [(rows)]="pageSize"
     (onPage)="onPageSizeChange($event)"
     [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]">
+    <ng-template pTemplate="caption">
+      <div class="flex justify-content-end">
+        <span class="material-symbols-outlined flex align-items-center search-icon-container px-2">
+          search
+        </span>
+        <input
+          class="search-input"
+          pInputText
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="dt1.filterGlobal(searchText, 'contains')"
+          placeholder="Search keyword" />
+      </div>
+    </ng-template>
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem" *ngIf="useCheckbox">
@@ -65,18 +89,18 @@
         <th>Active</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-customer>
+    <ng-template pTemplate="body" let-price>
       <tr>
         <td *ngIf="useCheckbox">
-          <p-tableCheckbox [value]="customer"></p-tableCheckbox>
+          <p-tableCheckbox [value]="price"></p-tableCheckbox>
         </td>
-        <td>{{ customer.name }}</td>
-        <td>{{ customer.averagePrice }}</td>
-        <td>{{ customer.customPrice }}</td>
-        <td>{{ customer.validFrom }}</td>
-        <td>{{ customer.validTo }}</td>
-        <td>{{ customer.proudct }}</td>
-        <td>{{ customer.isActive }}</td>
+        <td>{{ price.name }}</td>
+        <td>{{ price.averagePrice }}</td>
+        <td>{{ price.customPrice }}</td>
+        <td>{{ price.validFrom | date : "dd MMM yyyy" }}</td>
+        <td>{{ price.validTo | date : "dd MMM yyyy" }}</td>
+        <td>{{ price.proudct }}</td>
+        <td>{{ price.isActive }}</td>
       </tr>
     </ng-template>
   </p-table>

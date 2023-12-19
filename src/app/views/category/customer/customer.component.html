@@ -36,6 +36,7 @@
     <p-progressBar [value]="progressValue"></p-progressBar>
   </div>
   <p-table
+    #dt1
     [loading]="loading"
     [value]="dataSource"
     [(selection)]="selectedData"
@@ -47,10 +48,58 @@
     [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [globalFilterFields]="[
+      'code',
+      'name',
+      'salt',
+      'pin',
+      'emailAddress',
+      'outstandingBills',
+      'paymentDays',
+      'limitType',
+      'nik',
+      'displayMembership',
+      'membershipBarcode',
+      'deliveryDays',
+      'feesRokok',
+      'feesNonRokok',
+      'salesmanNIK',
+      'balance',
+      'pointReward',
+      'pic',
+      'phone',
+      'fax',
+      'mobile',
+      'area.description',
+      'addresses.addressName',
+      'bpGroup.description',
+      'creditLimit',
+      'isTaxCount',
+      'overallPointReward',
+      'latitude',
+      'longitude',
+      'accuracy',
+      'birthDate',
+      'transportType'
+    ]"
     [totalRecords]="totalRecords"
     [(rows)]="pageSize"
     (onPage)="onPageSizeChange($event)"
     [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]">
+    <ng-template pTemplate="caption">
+      <div class="flex justify-content-end">
+        <span class="material-symbols-outlined flex align-items-center search-icon-container px-2">
+          search
+        </span>
+        <input
+          class="search-input"
+          pInputText
+          type="text"
+          [(ngModel)]="searchText"
+          (input)="dt1.filterGlobal(searchText, 'contains')"
+          placeholder="Search keyword" />
+      </div>
+    </ng-template>
     <ng-template pTemplate="header">
       <tr>
         <th style="width: 4rem" *ngIf="useCheckbox">
@@ -86,7 +135,7 @@
         <th>Latitude</th>
         <th>Longitude</th>
         <th>Accuracy</th>
-        <th>Birth Date</th>
+        <th style="min-width: 130px">Birth Date</th>
         <th>Transport Type</th>
       </tr>
     </ng-template>
@@ -117,7 +166,9 @@
         <td>{{ customer.fax }}</td>
         <td>{{ customer.mobile }}</td>
         <td>{{ customer?.area?.description }}</td>
-        <td>{{ customer.addresses }}</td>
+        <td>
+          <div *ngFor="let address of customer.addresses">{{ address.addressName }},</div>
+        </td>
         <td>{{ customer?.bpGroup?.description }}</td>
         <td>{{ customer.creditLimit }}</td>
         <td>{{ customer.isTaxCount }}</td>
@@ -125,7 +176,7 @@
         <td>{{ customer.latitude }}</td>
         <td>{{ customer.longitude }}</td>
         <td>{{ customer.accuracy }}</td>
-        <td>{{ customer.birthDate }}</td>
+        <td>{{ customer.birthDate | date : "dd MMM yyy" }}</td>
         <td>{{ customer.transportType }}</td>
       </tr>
     </ng-template>

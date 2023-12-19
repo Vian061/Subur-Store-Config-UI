@@ -13,6 +13,7 @@ import { Constants } from "../../../constants";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { BusinessPartnerGroupModel } from "../../../models/business-partner-group-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-bp-group",
@@ -27,6 +28,7 @@ import { BusinessPartnerGroupModel } from "../../../models/business-partner-grou
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./bp-group.component.html",
@@ -40,6 +42,7 @@ export class BpGroupComponent {
 
   dataSource: BusinessPartnerGroupModel[] = [];
   selectedData: BusinessPartnerGroupModel[] = [];
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,

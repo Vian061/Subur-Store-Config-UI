@@ -15,6 +15,7 @@ import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { MenuModel } from "../../../models/menu-model";
 import { BranchModel } from "../../../models/branch-model";
+import { InputTextModule } from "primeng/inputtext";
 
 @Component({
   selector: "app-menu",
@@ -30,6 +31,7 @@ import { BranchModel } from "../../../models/branch-model";
     DialogModule,
     ToastModule,
     DropdownModule,
+    InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: "./menu.component.html",
@@ -47,6 +49,7 @@ export class MenuComponent {
   selectedData: MenuModel[] = [];
   branchData: BranchModel[] = [];
   selectedBranch: any;
+  searchText: string = "";
 
   constructor(
     private networkService: NetworkService,
