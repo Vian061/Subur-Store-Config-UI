@@ -3,10 +3,10 @@
 
   <div class="menu-list">
     <div class="flex justify-content-center">
-      <div class="flex flex-wrap">
-        <div class="justify-content-center my-2" *ngFor="let item of menus">
+      <div class="flex flex-wrap gap-3 justify-content-center">
+        <div *ngFor="let item of menus">
           <app-card-menu
-            class="flex justify-content-center"
+            class="shadow-2 flex justify-content-center"
             [icon]="item.icon"
             [title]="item.title"
             [desc]="item.description"

@@ -2,12 +2,18 @@
   <button
     (click)="drawerVisibility()"
     class="drawer-toggle"
-    [ngClass]="{ 'text-start': menuVisiblity == false }">
+    [ngClass]="{
+      'text-start drawer-icon-container': menuVisiblity == false,
+      'drawer-icon-container-show': menuVisiblity == true
+    }">
     <span *ngIf="menuVisiblity == false" class="material-symbols-outlined" style="font-size: 25px">
       keyboard_double_arrow_right
     </span>
     <span *ngIf="menuVisiblity == true" class="material-symbols-outlined" style="font-size: 25px">
       keyboard_double_arrow_left
+    </span>
+    <span class="menu-title" [ngClass]="{ 'text-start menu-title-show': menuVisiblity == true }">
+      Menu
     </span>
   </button>
 
