@@ -10,6 +10,7 @@
           id="username"
           aria-describedby="username-help"
           [(ngModel)]="username"
+          (keyup.enter)="login(this.username, this.password)"
           [autofocus]="true" />
       </div>
       <div class="d-flex flex-column mb-3">
@@ -21,6 +22,7 @@
           id="password"
           aria-describedby="password-help"
           [(ngModel)]="password"
+          (keyup.enter)="login(this.username, this.password)"
           [feedback]="false" />
       </div>
 
