@@ -34,11 +34,14 @@ export class LoginComponent {
     this.authService = authService;
   }
 
-  showError(error: string) {
+  showError(error: any) {
     var detail = "";
-    if (error) {
-      detail = error.replaceAll("_", " ");
+    if (error.error.error_description) {
+      detail = error.error.error_description.replaceAll("_", " ");
+    } else if (error.error.message) {
+      detail = error.error.message;
     }
+
     this.messageService.add({
       severity: "error",
       summary: "Login Failed",

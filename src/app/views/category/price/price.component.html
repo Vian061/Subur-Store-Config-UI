@@ -53,7 +53,7 @@
       'customPrice',
       'validFrom',
       'validTo',
-      'proudct',
+      'productModel.brand',
       'isActive'
     ]"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -99,7 +99,7 @@
         <td>{{ price.customPrice }}</td>
         <td>{{ price.validFrom | date : "dd MMM yyyy" }}</td>
         <td>{{ price.validTo | date : "dd MMM yyyy" }}</td>
-        <td>{{ price.proudct }}</td>
+        <td>{{ price.productModel?.brand }}</td>
         <td>{{ price.isActive }}</td>
       </tr>
     </ng-template>

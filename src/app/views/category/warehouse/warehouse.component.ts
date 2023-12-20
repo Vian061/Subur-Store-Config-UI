@@ -14,6 +14,8 @@ import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { WarehouseModel } from "../../../models/warehouse-model";
 import { InputTextModule } from "primeng/inputtext";
+import { DropdownModule } from "primeng/dropdown";
+import { BranchModel } from "../../../models/branch-model";
 
 @Component({
   selector: "app-warehouse",
@@ -28,6 +30,7 @@ import { InputTextModule } from "primeng/inputtext";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    DropdownModule,
     InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
@@ -45,6 +48,8 @@ export class WarehouseComponent {
   dataSource: WarehouseModel[] = [];
   selectedData: WarehouseModel[] = [];
   searchText: string = "";
+  branchData: BranchModel[] = [];
+  selectedBranch: any;
 
   constructor(
     private networkService: NetworkService,
@@ -52,10 +57,16 @@ export class WarehouseComponent {
     private messageService: MessageService
   ) {
     this.isButtonDisabled();
+    this.networkService.get(Constants.UrlEndpoint.branchesEndpoint).subscribe({
+      next: (response) => {
+        this.branchData = response;
+      },
+    });
   }
 
-  onPageChange(event: any) {
-    console.log(event);
+  onPageChange(event: any) {}
+  branchChange() {
+    this.isButtonDisabled();
   }
 
   loadData() {
@@ -69,24 +80,18 @@ export class WarehouseComponent {
         this.loading = false;
       },
       error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
+        this.errorHandling(error);
         this.loading = false;
       },
     });
   }
 
   isButtonDisabled() {
-    if (this.dataSource.length <= 0) {
+    if (this.dataSource.length <= 0 || this.selectedBranch == null) {
       this.buttonDisabled = true;
     } else {
       if (this.useCheckbox) {
-        if (this.selectedData.length <= 0) {
+        if (this.selectedData.length <= 0 || this.selectedBranch == null) {
           this.buttonDisabled = true;
         } else {
           this.buttonDisabled = false;
@@ -134,26 +139,49 @@ export class WarehouseComponent {
 
   submit() {
     const data = this.useCheckbox ? this.selectedData : this.dataSource;
+    data.forEach((_) => (_.branch = this.selectedBranch));
 
     this.networkService.post(Constants.UrlEndpoint.warehouseEndpoint, data).subscribe({
       next: (response) => {
         this.messageService.add({
           severity: "success",
           summary: "Success",
-          detail: "Submit Success",
+          detail: response,
           life: 3000,
         });
       },
       error: (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
+        this.errorHandling(error);
       },
     });
   }
-}
 
-const DATA: WarehouseModel[] = [];
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
+      });
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
+      });
+    }
+  }
+}

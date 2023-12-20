@@ -63,12 +63,7 @@ export class BranchComponent {
         this.loading = false;
       },
       error: (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
+        this.errorHandling(error);
         this.loading = false;
       },
     });
@@ -126,83 +121,49 @@ export class BranchComponent {
   }
 
   submit() {
-    /// if useCheckBox post selectedData otherwise post dataSource
-    if (this.useCheckbox) {
-      this.networkService
-        .post(Constants.UrlEndpoint.branchesEndpoint, this.selectedData)
-        .subscribe({
-          next: (response) => {
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Submit Success",
-              life: 3000,
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.statusText,
-              life: 4000,
-            });
-          },
+    const data = this.useCheckbox ? this.selectedData : this.dataSource;
+
+    this.networkService.post(Constants.UrlEndpoint.branchesEndpoint, data).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: response,
+          life: 3000,
         });
-    }
-    {
-      this.networkService.post(Constants.UrlEndpoint.branchesEndpoint, this.dataSource).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Submit Success",
-            life: 3000,
-          });
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
-        },
+      },
+      error: (error) => {
+        this.errorHandling(error);
+      },
+    });
+  }
+
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
+      });
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
       });
     }
   }
 }
-
-const DATA: BranchModel[] = [
-  {
-    code: "001",
-    description: "Branch 1",
-    latitude: 123.456,
-    longitude: 789.012,
-    accuracy: 0.95,
-    imageUrl:
-      "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    nominalPerPointRokok: 10,
-    nominalPerPointRokokCredit: 8,
-    multiplyPointFullPaymentRokok: 2,
-    nominalPerPointNonRokok: 5,
-    nominalPerPointNonRokokCredit: 4,
-    multiplyPointFullPaymentNonRokok: 3,
-    minimalAmountNonRokokForNotification: 20,
-  },
-  {
-    code: "002",
-    description: "Branch 2",
-    latitude: 234.567,
-    longitude: 890.123,
-    accuracy: 0.92,
-    imageUrl:
-      "https://images.unsplash.com/photo-1701890739231-6c00f071a706?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    nominalPerPointRokok: 12,
-    nominalPerPointRokokCredit: 9,
-    multiplyPointFullPaymentRokok: 3,
-    nominalPerPointNonRokok: 6,
-    nominalPerPointNonRokokCredit: 5,
-    multiplyPointFullPaymentNonRokok: 4,
-    minimalAmountNonRokokForNotification: 25,
-  },
-];

@@ -58,8 +58,6 @@ export class BankComponent {
     this.selectedData = [];
     this.networkService.get(Constants.UrlEndpoint.bankEndpoint + "/POSData").subscribe({
       next: (response) => {
-        console.log("Data from :", Constants.UrlEndpoint.bankEndpoint + "/POSData");
-        console.log(response);
         this.dataSource = response;
         this.isButtonDisabled();
         this.loading = false;
@@ -128,71 +126,49 @@ export class BankComponent {
   }
 
   submit() {
-    /// if useCheckBox post selectedData otherwise post dataSource
-    if (this.useCheckbox) {
-      this.networkService.post(Constants.UrlEndpoint.bankEndpoint, this.selectedData).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Submit Success",
-            life: 3000,
-          });
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
-        },
+    const data = this.useCheckbox ? this.selectedData : this.dataSource;
+
+    this.networkService.post(Constants.UrlEndpoint.bankEndpoint, data).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: response,
+          life: 3000,
+        });
+      },
+      error: (error) => {
+        this.errorHandling(error);
+      },
+    });
+  }
+
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
       });
-    }
-    {
-      this.networkService.post(Constants.UrlEndpoint.bankEndpoint, this.dataSource).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Submit Success",
-            life: 3000,
-          });
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
-        },
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
       });
     }
   }
 }
-
-const DATA: BankModel[] = [
-  {
-    accountName: "A-0001",
-    accountNo: "0001",
-    bankName: "BCA",
-    imageData: "",
-    imageName: "",
-    imageUrl:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    journalAccountCode: "J-0001",
-    journalAccountName: "Someone",
-  },
-  {
-    accountName: "A-0002",
-    accountNo: "0002",
-    bankName: "BNI",
-    imageData: "",
-    imageName: "",
-    imageUrl:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    journalAccountCode: "J-0001",
-    journalAccountName: "Someone",
-  },
-];

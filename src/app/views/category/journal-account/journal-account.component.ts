@@ -14,6 +14,8 @@ import { Constants } from "../../../constants";
 import { NetworkService } from "../../../services/network.service";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { InputTextModule } from "primeng/inputtext";
+import { BranchModel } from "../../../models/branch-model";
+import { DropdownModule } from "primeng/dropdown";
 
 @Component({
   selector: "app-journal-account",
@@ -28,6 +30,7 @@ import { InputTextModule } from "primeng/inputtext";
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    DropdownModule,
     InputTextModule,
   ],
   providers: [ConfirmationService, MessageService],
@@ -45,6 +48,8 @@ export class JournalAccountComponent {
   dataSource: JournalAccountModel[] = [];
   selectedData: JournalAccountModel[] = [];
   searchText: string = "";
+  branchData: BranchModel[] = [];
+  selectedBranch: any;
 
   constructor(
     private networkService: NetworkService,
@@ -52,11 +57,18 @@ export class JournalAccountComponent {
     private messageService: MessageService
   ) {
     this.isButtonDisabled();
+    this.networkService.get(Constants.UrlEndpoint.branchesEndpoint).subscribe({
+      next: (response) => {
+        this.branchData = response;
+      },
+    });
   }
 
-  onPageChange(event: any) {
-    console.log(event);
+  branchChange() {
+    this.isButtonDisabled();
   }
+
+  onPageChange(event: any) {}
 
   loadData() {
     this.loading = true;
@@ -69,23 +81,18 @@ export class JournalAccountComponent {
         this.loading = false;
       },
       error: (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
+        this.errorHandling(error);
         this.loading = false;
       },
     });
   }
 
   isButtonDisabled() {
-    if (this.dataSource.length <= 0) {
+    if (this.dataSource.length <= 0 || this.selectedBranch == null) {
       this.buttonDisabled = true;
     } else {
       if (this.useCheckbox) {
-        if (this.selectedData.length <= 0) {
+        if (this.selectedData.length <= 0 || this.selectedBranch == null) {
           this.buttonDisabled = true;
         } else {
           this.buttonDisabled = false;
@@ -132,73 +139,50 @@ export class JournalAccountComponent {
   }
 
   submit() {
-    /// if useCheckBox post selectedData otherwise post dataSource
-    if (this.useCheckbox) {
-      this.networkService
-        .post(Constants.UrlEndpoint.journalAccountEndpoint, this.selectedData)
-        .subscribe({
-          next: (response) => {
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Submit Success",
-              life: 3000,
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.statusText,
-              life: 4000,
-            });
-          },
+    const data = this.useCheckbox ? this.selectedData : this.dataSource;
+    data.forEach((_) => (_.branch = this.selectedBranch));
+
+    this.networkService.post(Constants.UrlEndpoint.journalAccountEndpoint, data).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: response,
+          life: 3000,
         });
-    }
-    {
-      this.networkService
-        .post(Constants.UrlEndpoint.journalAccountEndpoint, this.dataSource)
-        .subscribe({
-          next: (response) => {
-            this.messageService.add({
-              severity: "success",
-              summary: "Success",
-              detail: "Submit Success",
-              life: 3000,
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.statusText,
-              life: 4000,
-            });
-          },
+      },
+      error: (error) => {
+        this.errorHandling(error);
+      },
+    });
+  }
+
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
         });
+      });
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
+      });
     }
   }
 }
-
-const DATA: JournalAccountModel[] = [
-  {
-    accountCode: "AC001",
-    accountName: "Savings Account",
-    branch: {
-      code: "001",
-      description: "Branch 1",
-      latitude: 123.456,
-      longitude: 789.012,
-      accuracy: 0.95,
-      imageUrl:
-        "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      nominalPerPointRokok: 10,
-      nominalPerPointRokokCredit: 8,
-      multiplyPointFullPaymentRokok: 2,
-      nominalPerPointNonRokok: 5,
-      nominalPerPointNonRokokCredit: 4,
-      multiplyPointFullPaymentNonRokok: 3,
-      minimalAmountNonRokokForNotification: 20,
-    },
-  },
-];

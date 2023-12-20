@@ -55,9 +55,7 @@ export class WarehouseBinComponent {
     this.isButtonDisabled();
   }
 
-  onPageChange(event: any) {
-    console.log(event);
-  }
+  onPageChange(event: any) {}
 
   loadData() {
     this.loading = true;
@@ -65,19 +63,12 @@ export class WarehouseBinComponent {
     this.selectedData = [];
     this.networkService.get(Constants.UrlEndpoint.warehouseBinEndpoint + "/POSData").subscribe({
       next: (response) => {
-        console.log(response);
         this.dataSource = response;
         this.isButtonDisabled();
         this.loading = false;
       },
       error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
+        this.errorHandling(error);
         this.loading = false;
       },
     });
@@ -142,21 +133,42 @@ export class WarehouseBinComponent {
         this.messageService.add({
           severity: "success",
           summary: "Success",
-          detail: "Submit Success",
+          detail: response,
           life: 3000,
         });
       },
       error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.error.detail,
-          life: 4000,
-        });
+        this.errorHandling(error);
       },
     });
   }
-}
 
-const DATA: WarehouseBinModel[] = [];
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
+      });
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
+      });
+    }
+  }
+}

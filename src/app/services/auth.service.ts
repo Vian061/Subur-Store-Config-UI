@@ -95,7 +95,7 @@ export class AuthService {
           return "";
         }),
         catchError((error) => {
-          return throwError(() => error.error.error_description);
+          return throwError(() => error);
         })
       );
     } else {

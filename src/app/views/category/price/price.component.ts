@@ -93,10 +93,6 @@ export class PriceComponent {
 
             progress += 1;
             this.updateProgressValue(progress, lastPageNumber);
-
-            console.log("last page :", lastPageNumber);
-            console.log("data Source :", this.dataSource.length);
-            console.log("total Records :", this.totalRecords);
             if (this.dataSource.length === this.totalRecords) {
               this.loading = false;
               this.isButtonDisabled();
@@ -111,12 +107,7 @@ export class PriceComponent {
               this.isButtonDisabled();
               this.progressValue = 0;
             }
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.statusText,
-              life: 4000,
-            });
+            this.errorHandling(error);
           },
         });
     }
@@ -135,12 +126,7 @@ export class PriceComponent {
           resolve(true);
         },
         error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
+          this.errorHandling(error);
           resolve(false);
         },
       });
@@ -217,110 +203,59 @@ export class PriceComponent {
     for (let i = 0; i < totalBatch; i++) {
       const batchData = data.slice(i * batchSize, (i + 1) * batchSize);
 
-      this.networkService.post(Constants.UrlEndpoint.priceEndpoint, batchData).subscribe({
-        next: (response) => {
-          setTimeout(async () => {
+      setTimeout(async () => {
+        this.networkService.post(Constants.UrlEndpoint.priceEndpoint, batchData).subscribe({
+          next: (response) => {
             progress += 1;
             this.updateProgressValue(progress, totalBatch);
             if (i === totalBatch - 1) {
               this.messageService.add({
                 severity: "success",
                 summary: "Success",
-                detail: "Submit Success",
+                detail: response,
                 life: 3000,
               });
               if (i === totalBatch - 1) this.loading = false;
             }
-          }, 100);
-        },
-        error: (error) => {
-          setTimeout(async () => {
+          },
+          error: (error) => {
             progress += 1;
             this.updateProgressValue(progress, totalBatch);
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.error.detail,
-              life: 4000,
-            });
+
+            this.errorHandling(error);
             if (i === totalBatch - 1) this.loading = false;
-          }, 400);
-        },
+          },
+        });
+      }, 500);
+    }
+  }
+
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
+      });
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
       });
     }
   }
 }
-
-const DATA: PriceModel[] = [
-  {
-    name: "Sample Price",
-    averagePrice: 50.0,
-    customPrice: 60.0,
-    validFrom: new Date("2023-01-01"),
-    validTo: new Date("2023-12-31"),
-    proudct: {
-      manufacturer: { description: "Subur" },
-      isTaxCount: true,
-      brand: "Sample Brand",
-      itemGroup1: "Group A",
-      itemGroup2: "Group B",
-      isInactive: false,
-      isInOpname: true,
-      barcode2: "123456789",
-      barcode3: "987654321",
-      barcode4: "555555555",
-      nominalPoint: 10,
-      isCalculatePrice: true,
-      isForSalesmanWeb: true,
-      isForB2C: false,
-      code: "ITEM001",
-      name: "Sample Item",
-      barcode: "1234567890",
-      isInventoryItem: true,
-      isSalesItem: true,
-      isPurchaseItem: false,
-      basePrice: 50.99,
-      itemGroupModel: {
-        code: "IG001",
-        description: "Electronics",
-        nominalPerpoint: 10,
-      },
-      uoMGroupModel: {
-        code: "UOMGroup001",
-        description: "UoM Group 1",
-        details: [],
-      },
-      productImageUrl: "https://example.com/image-url.jpg",
-    },
-    isActive: true,
-    details: [
-      {
-        lineNo: 1,
-        colNo: 1,
-        uoMGroup: {
-          code: "UOMGroup001",
-          description: "UoM Group 1",
-          details: [],
-        },
-        uoM: {
-          code: "UOM001",
-          description: "Unit of Measurement 1",
-          sortBy: 1,
-          isPutExtraFlagInReport: true,
-        },
-        customerGroup: {
-          code: "CustomerGroup001",
-          description: "Customer Group 1",
-          groupType: 1,
-        },
-        baseHorizontalPercentageIncrement: 5,
-        baseVerticalPercentageIncrement: 10,
-        baseVerticalPercentage: 15,
-        baseHorizontalPercentage: 20,
-        baseQuantity: 100,
-        basePrice: 50,
-        basePercentage: 25,
-      },
-    ],
-  },
-];

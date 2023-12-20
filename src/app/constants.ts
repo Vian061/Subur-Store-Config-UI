@@ -109,10 +109,11 @@ export class Constants {
     static identityServerEndpoint: string = "http://192.168.1.15:44310/";
     static passwordTokenRequestEndpoint: string = this.identityServerEndpoint + "connect/token";
     // static apiEndpoint: string = "http://localhost:5084/";
-    // static apiEndpoint: string = "http://192.168.1.15:44350/";
-    // static apiV1: string = this.apiEndpoint + "api/v1/";
-    static apiV1: string = "api/v1/";
-    static apiV2: string = "api/v2/";
+    static apiEndpoint: string = "http://192.168.1.15:44350/";
+    static apiV1: string = this.apiEndpoint + "api/v1/";
+    static apiV2: string = this.apiEndpoint + "api/v2/";
+    // static apiV1: string = "api/v1/";
+    // static apiV2: string = "api/v2/";
 
     static areaEndpoint: string = this.apiV1 + "Areas";
     static bankEndpoint: string = this.apiV1 + "Banks";

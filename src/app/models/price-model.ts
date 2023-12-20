@@ -9,7 +9,7 @@ export interface PriceModel {
   customPrice: number;
   validFrom: Date;
   validTo: Date;
-  proudct: ProudctModel;
+  productModel: ProudctModel;
   isActive: boolean;
   details: PriceDetailModel[];
 }

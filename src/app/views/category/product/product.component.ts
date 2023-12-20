@@ -67,7 +67,6 @@ export class ProductComponent {
 
     this.loading = true;
     this.countData().then((result) => {
-      console.log(this.totalRecords);
       if (result) {
         this.loadData();
       }
@@ -108,12 +107,7 @@ export class ProductComponent {
               this.isButtonDisabled();
               this.progressValue = 0;
             }
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.error.detail,
-              life: 4000,
-            });
+            this.errorHandling(error);
           },
         });
     }
@@ -132,12 +126,7 @@ export class ProductComponent {
           resolve(true);
         },
         error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
+          this.errorHandling(error);
           resolve(false);
         },
       });
@@ -223,7 +212,7 @@ export class ProductComponent {
               this.messageService.add({
                 severity: "success",
                 summary: "Success",
-                detail: "Submit Success",
+                detail: response,
                 life: 3000,
               });
               if (i === totalBatch - 1) this.loading = false;
@@ -231,57 +220,41 @@ export class ProductComponent {
           }, 100);
         },
         error: (error) => {
-          setTimeout(async () => {
-            console.log(error);
-            progress += 1;
-            this.updateProgressValue(progress, totalBatch);
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.error.detail,
-              life: 4000,
-            });
-            if (i === totalBatch - 1) this.loading = false;
-          }, 100);
+          progress += 1;
+          this.updateProgressValue(progress, totalBatch);
+          this.errorHandling(error);
+          if (i === totalBatch - 1) this.loading = false;
         },
       });
     }
   }
-}
 
-const DATA: ProudctModel[] = [
-  {
-    manufacturer: { description: "Subur" },
-    isTaxCount: true,
-    brand: "Sample Brand",
-    itemGroup1: "Group A",
-    itemGroup2: "Group B",
-    isInactive: false,
-    isInOpname: true,
-    barcode2: "123456789",
-    barcode3: "987654321",
-    barcode4: "555555555",
-    nominalPoint: 10,
-    isCalculatePrice: true,
-    isForSalesmanWeb: true,
-    isForB2C: false,
-    code: "ITEM001",
-    name: "Sample Item",
-    barcode: "1234567890",
-    isInventoryItem: true,
-    isSalesItem: true,
-    isPurchaseItem: false,
-    basePrice: 50.99,
-    itemGroupModel: {
-      code: "IG001",
-      description: "Electronics",
-      nominalPerpoint: 10,
-    },
-    uoMGroupModel: {
-      code: "UOMGroup001",
-      description: "UoM Group 1",
-      details: [],
-    },
-    productImageUrl: "https://example.com/image-url.jpg",
-  },
-];
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
+      });
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
+      });
+    }
+  }
+}

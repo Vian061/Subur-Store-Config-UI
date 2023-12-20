@@ -63,12 +63,7 @@ export class AreaComponent {
         this.loading = false;
       },
       error: (error) => {
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
+        this.errorHandling(error);
         this.loading = false;
       },
     });
@@ -126,45 +121,48 @@ export class AreaComponent {
   }
 
   submit() {
-    /// if useCheckBox post selectedData otherwise post dataSource
-    if (this.useCheckbox) {
-      this.networkService.post(Constants.UrlEndpoint.areaEndpoint, this.selectedData).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Submit Success",
-            life: 3000,
-          });
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
-        },
+    const data = this.useCheckbox ? this.selectedData : this.dataSource;
+
+    this.networkService.post(Constants.UrlEndpoint.areaEndpoint, data).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: "success",
+          summary: "Success",
+          detail: response,
+          life: 3000,
+        });
+      },
+      error: (error) => {
+        this.errorHandling(error);
+      },
+    });
+  }
+
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
       });
-    }
-    {
-      this.networkService.post(Constants.UrlEndpoint.areaEndpoint, this.dataSource).subscribe({
-        next: (response) => {
-          this.messageService.add({
-            severity: "success",
-            summary: "Success",
-            detail: "Submit Success",
-            life: 3000,
-          });
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
-        },
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
       });
     }
   }

@@ -79,7 +79,6 @@ export class TableComponent {
         this.selectedData.push(event);
       }
 
-      console.log(this.selectedData);
       this.onSingleChecked.emit(event);
     }
   }

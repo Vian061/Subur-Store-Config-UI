@@ -59,15 +59,12 @@ export class MenuComponent {
     this.isButtonDisabled();
     this.networkService.get(Constants.UrlEndpoint.branchesEndpoint).subscribe({
       next: (response) => {
-        console.log(response);
         this.branchData = response;
       },
     });
   }
 
-  onPageChange(event: any) {
-    console.log(event);
-  }
+  onPageChange(event: any) {}
 
   loadData() {
     this.loading = true;
@@ -80,13 +77,7 @@ export class MenuComponent {
         this.loading = false;
       },
       error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.statusText,
-          life: 4000,
-        });
+        this.errorHandling(error);
         this.loading = false;
       },
     });
@@ -149,9 +140,6 @@ export class MenuComponent {
 
   submit() {
     const data = this.useCheckbox ? this.selectedData : this.dataSource;
-
-    console.log(this.selectedBranch);
-
     data.forEach((_) => (_.branch = this.selectedBranch));
 
     this.networkService.post(Constants.UrlEndpoint.menuEndpoint, data).subscribe({
@@ -159,46 +147,42 @@ export class MenuComponent {
         this.messageService.add({
           severity: "success",
           summary: "Success",
-          detail: "Submit Success",
+          detail: response,
           life: 3000,
         });
       },
       error: (error) => {
-        console.log(error);
-        this.messageService.add({
-          severity: "error",
-          summary: "Error " + error.status,
-          detail: error.error.detail,
-          life: 4000,
-        });
+        this.errorHandling(error);
       },
     });
   }
-}
 
-const DATA: MenuModel[] = [
-  {
-    code: "M001",
-    description: "Menu 1",
-    menuOrder: 1,
-    isActive: true,
-    formName: "Form1",
-    formCaption: "Form 1 Caption",
-    branch: {
-      code: "001",
-      description: "Branch 1",
-      latitude: 123.456,
-      longitude: 789.012,
-      accuracy: 0.95,
-      imageUrl:
-        "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      nominalPerPointRokok: 10,
-      nominalPerPointRokokCredit: 8,
-      multiplyPointFullPaymentRokok: 2,
-      nominalPerPointNonRokok: 5,
-      nominalPerPointNonRokokCredit: 4,
-      multiplyPointFullPaymentNonRokok: 3,
-      minimalAmountNonRokokForNotification: 20,
-    },
-  },
-];
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
+      });
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
+      });
+    }
+  }
+}

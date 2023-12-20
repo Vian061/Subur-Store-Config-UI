@@ -107,12 +107,7 @@ export class CustomerComponent {
               this.isButtonDisabled();
               this.progressValue = 0;
             }
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.statusText,
-              life: 4000,
-            });
+            this.errorHandling(error);
           },
         });
     }
@@ -131,12 +126,7 @@ export class CustomerComponent {
           resolve(true);
         },
         error: (error) => {
-          this.messageService.add({
-            severity: "error",
-            summary: "Error " + error.status,
-            detail: error.statusText,
-            life: 4000,
-          });
+          this.errorHandling(error);
           resolve(false);
         },
       });
@@ -222,7 +212,7 @@ export class CustomerComponent {
               this.messageService.add({
                 severity: "success",
                 summary: "Success",
-                detail: "Submit Success",
+                detail: response,
                 life: 3000,
               });
               if (i === totalBatch - 1) this.loading = false;
@@ -233,15 +223,39 @@ export class CustomerComponent {
           setTimeout(async () => {
             progress += 1;
             this.updateProgressValue(progress, totalBatch);
-            this.messageService.add({
-              severity: "error",
-              summary: "Error " + error.status,
-              detail: error.error.detail,
-              life: 4000,
-            });
+            this.errorHandling(error);
             if (i === totalBatch - 1) this.loading = false;
           }, 100);
         },
+      });
+    }
+  }
+
+  private errorHandling(error: any) {
+    if (error.error.errors) {
+      const errors: string[] = Object.values(error.error.errors);
+
+      errors.forEach((_) => {
+        this.messageService.add({
+          severity: "error",
+          summary: "Error " + error.status,
+          detail: _,
+          life: 4000,
+        });
+      });
+    } else if (error.error.detail) {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.detail,
+        life: 4000,
+      });
+    } else {
+      this.messageService.add({
+        severity: "error",
+        summary: "Error " + error.status,
+        detail: error.error.message,
+        life: 4000,
       });
     }
   }
