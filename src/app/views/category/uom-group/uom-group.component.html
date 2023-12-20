@@ -84,7 +84,11 @@
         </td>
         <td>{{ uomGruop.code }}</td>
         <td>{{ uomGruop.description }}</td>
-        <td>{{ uomGruop.details }}</td>
+        <td>
+          <span *ngFor="let detail of uomGruop.details">
+            {{ detail.uoMPackage }}
+          </span>
+        </td>
       </tr>
     </ng-template>
   </p-table>

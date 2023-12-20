@@ -4,4 +4,5 @@ export interface BaseAccountModel {
   accountCode: string;
   accountName: string;
   branch: BranchModel;
+  discriminator: string;
 }

@@ -149,16 +149,7 @@ export class PriceComponent {
     }
   }
 
-  selectAllChange(event: any) {
-    const checked = event.checked;
-
-    if (checked) {
-      this.selectedData = this.dataSource;
-      this.checkAll = true;
-    } else {
-      this.selectedData = [];
-      this.checkAll = false;
-    }
+  selectAllChange() {
     this.isButtonDisabled();
   }
 

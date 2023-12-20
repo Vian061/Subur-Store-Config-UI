@@ -40,13 +40,15 @@
     [loading]="loading"
     [value]="dataSource"
     [(selection)]="selectedData"
-    (selectAllChange)="selectAllChange($event)"
+    (selectAllChange)="selectAllChange()"
     (selectionChange)="selectChange()"
-    [selectAll]="checkAll"
     dataKey="code"
     [paginator]="true"
+    [rows]="10"
     [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }"
+    [totalRecords]="totalRecords"
+    [(rows)]="pageSize"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [globalFilterFields]="[
       'code',
@@ -82,9 +84,6 @@
       'birthDate',
       'transportType'
     ]"
-    [totalRecords]="totalRecords"
-    [(rows)]="pageSize"
-    (onPage)="onPageSizeChange($event)"
     [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]">
     <ng-template pTemplate="caption">
       <div class="flex justify-content-end">
