@@ -8,3 +8,9 @@ h1 {
 .card {
   background: white;
 }
+
+.search-input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  min-width: 180px;
+}
