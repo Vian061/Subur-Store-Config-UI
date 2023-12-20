@@ -57,6 +57,12 @@ export class Constants {
       redirectUri: "/Menu",
     },
     {
+      icon: "settings_applications",
+      title: "POS Configuration",
+      description: "Sync POS Configuration to a branch",
+      redirectUri: "/Pos-Configuration",
+    },
+    {
       icon: "monetization_on",
       title: "Price",
       description: "Sync Price Configuration to a branch",
@@ -124,6 +130,7 @@ export class Constants {
     static journalAccountEndpoint: string = this.apiV1 + "JournalAccounts";
     static manufacturerEndpoint: string = this.apiV1 + "Manufacturers";
     static menuEndpoint: string = this.apiV1 + "Menus";
+    static posConfigEndpoint: string = this.apiV1 + "POSConfigurations";
     static priceEndpoint: string = this.apiV1 + "Prices";
     static productEndpoint: string = this.apiV1 + "Products";
     static roleMenuEndpoint: string = this.apiV1 + "RoleMenus";

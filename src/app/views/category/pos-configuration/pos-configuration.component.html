@@ -1,7 +1,7 @@
 <div class="card flex justify-content-center flex-column p-3">
-  <h1>Journal Account</h1>
+  <h1>POS Configuration</h1>
 
-  <p>Journal Account data from Subur Database</p>
+  <p>POS Configuration data from Subur Database</p>
 
   <div class="d-flex flex-row align-items-center mb-2">
     <p-button label="Load Data" (onClick)="loadData()" severity="success" class="me-2"></p-button>
@@ -35,13 +35,13 @@
     (onHeaderCheckboxToggle)="selectAllChange()"
     (selectAllChange)="selectAllChange()"
     (selectionChange)="selectChange()"
-    dataKey="accountCode"
+    dataKey="key"
     [paginator]="true"
     [rows]="10"
     [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }"
-    [globalFilterFields]="['accountCode', 'accountName', 'discriminator']"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [globalFilterFields]="['key', 'value', 'group']"
     [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]">
     <ng-template pTemplate="caption">
       <div class="flex justify-content-end">
@@ -62,55 +62,43 @@
         <th style="width: 4rem" *ngIf="useCheckbox">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th>Account Code</th>
-        <th>Account Name</th>
-        <th>Discriminator</th>
+        <th>Key</th>
+        <th>Value</th>
+        <th>Group</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-journalAccount let-editing="editing">
+    <ng-template pTemplate="body" let-posConfig let-editing="editing">
       <tr>
         <td *ngIf="useCheckbox">
-          <p-tableCheckbox [value]="journalAccount"></p-tableCheckbox>
+          <p-tableCheckbox [value]="posConfig"></p-tableCheckbox>
         </td>
-        <td [pEditableColumn]="journalAccount.accountCode" pEditableColumnField="accountCode">
+        <td [pEditableColumn]="posConfig.key" pEditableColumnField="key">
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input
-                class="w-full"
-                pInputText
-                type="text"
-                [(ngModel)]="journalAccount.accountCode" />
+              <input class="w-full" pInputText type="text" [(ngModel)]="posConfig.key" />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ journalAccount.accountCode }}
+              {{ posConfig.key }}
             </ng-template>
           </p-cellEditor>
         </td>
-        <td [pEditableColumn]="journalAccount.accountName" pEditableColumnField="accountName">
+        <td [pEditableColumn]="posConfig.value" pEditableColumnField="value">
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input
-                class="w-full"
-                pInputText
-                type="text"
-                [(ngModel)]="journalAccount.accountName" />
+              <input class="w-full" pInputText type="text" [(ngModel)]="posConfig.value" />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ journalAccount.accountName }}
+              {{ posConfig.value }}
             </ng-template>
           </p-cellEditor>
         </td>
-        <td [pEditableColumn]="journalAccount.discriminator" pEditableColumnField="discriminator">
+        <td [pEditableColumn]="posConfig.group" pEditableColumnField="group">
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input
-                class="w-full"
-                pInputText
-                type="text"
-                [(ngModel)]="journalAccount.discriminator" />
+              <input class="w-full" pInputText type="text" [(ngModel)]="posConfig.group" />
             </ng-template>
             <ng-template pTemplate="output">
-              {{ journalAccount.discriminator }}
+              {{ posConfig.group }}
             </ng-template>
           </p-cellEditor>
         </td>

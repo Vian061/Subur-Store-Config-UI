@@ -20,6 +20,7 @@ import { LoginComponent } from "./views/login/login.component";
 import { AuthGuard } from "./services/auth-guard";
 import { BpGroupComponent } from "./views/category/bp-group/bp-group.component";
 import { RoleMenuComponent } from "./views/category/role-menu/role-menu.component";
+import { PosConfigurationComponent } from "./views/category/pos-configuration/pos-configuration.component";
 
 export const routes: Routes = [
   { path: "", canActivate: [AuthGuard], component: DashboardComponent },
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: "Journal-Account", canActivate: [AuthGuard], component: JournalAccountComponent },
   { path: "Manufacturer", canActivate: [AuthGuard], component: ManufacturerComponent },
   { path: "Menu", canActivate: [AuthGuard], component: MenuComponent },
+  { path: "Pos-Configuration", canActivate: [AuthGuard], component: PosConfigurationComponent },
   { path: "Price", canActivate: [AuthGuard], component: PriceComponent },
   { path: "Product", canActivate: [AuthGuard], component: ProductComponent },
   { path: "Role", canActivate: [AuthGuard], component: RoleComponent },

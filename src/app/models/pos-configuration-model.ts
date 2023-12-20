@@ -1,6 +1,6 @@
 import { BranchModel } from "./branch-model";
 
-export interface POSTConfiguration {
+export interface POSConfigurationModel {
   key: string;
   value: string;
   group: string;
