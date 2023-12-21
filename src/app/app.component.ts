@@ -12,15 +12,12 @@ import { map } from "rxjs";
   styleUrls: ["./app.component.scss"],
   imports: [CommonModule, RouterOutlet, DrawerComponent],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = "StoreConfiguration";
   authenticated: boolean = false;
 
   constructor(private authService: AuthService) {
     // this.authenticated = this.authService.isAuthenticated();
-  }
-
-  ngOnInit() {
     this.authService.isAuthenticated().subscribe({
       next: (authenticated) => {
         this.authenticated = authenticated;

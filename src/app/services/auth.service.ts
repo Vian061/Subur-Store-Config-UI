@@ -64,10 +64,27 @@ export class AuthService {
 
     const headers = new HttpHeaders({
       "Content-Type": "application/x-www-form-urlencoded",
-      "Access-Control-Allow-Origin": ["http, https"],
-      "Access-Control-Allow-Methods": ["DELETE, POST, GET, OPTIONS"],
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
-      Authorization: "Basic " + btoa("SuburStoreConfiguration-Web:SuburStoreConfiguration-Web"),
+      Authorization:
+        "Basic " + btoa(Constants.is4Client.client_id + ":" + Constants.is4Client.client_secret),
+    });
+
+    return this.http.post<any>(Constants.UrlEndpoint.passwordTokenRequestEndpoint, body, {
+      headers: headers,
+    });
+  }
+
+  refreshToken(): Observable<any> {
+    const refreshToken = this.getRefreshToken();
+    const body =
+      "grant_type=refresh_token&refresh_token=" +
+      refreshToken +
+      "&scope=" +
+      Constants.is4Client.scope;
+
+    const headers = new HttpHeaders({
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization:
+        "Basic " + btoa(Constants.is4Client.client_id + ":" + Constants.is4Client.client_secret),
     });
 
     return this.http.post<any>(Constants.UrlEndpoint.passwordTokenRequestEndpoint, body, {
@@ -77,7 +94,34 @@ export class AuthService {
 
   checkToken() {
     const token = this.getToken();
-    if (token) this.isAuthenticatedSubject.next(true);
+    if (token) {
+      const decodedToken = jwtDecode<any>(token!);
+      const expDate = new Date(decodedToken.exp * 1000);
+      const currentDate = new Date();
+      const currentUTCTime = new Date(currentDate.toUTCString());
+
+      if (expDate <= currentUTCTime) {
+        setTimeout(() => {
+          this.refreshToken().subscribe({
+            next: (response) => {
+              var decodedToken = jwtDecode<any>(response.access_token);
+              this.cookieService.deleteAll();
+              this.setToken(response.access_token);
+              this.setRefreshToken(response.refresh_token);
+              this.setUsername(decodedToken.name);
+              this.isAuthenticatedSubject.next(true);
+            },
+            error: (error) => {
+              this.logout();
+            },
+          });
+        }, 10000);
+      } else {
+        this.isAuthenticatedSubject.next(true);
+      }
+    } else {
+      this.isAuthenticatedSubject.next(false);
+    }
   }
 
   login(username: string, password: string): Observable<any> {
@@ -112,6 +156,8 @@ export class AuthService {
   }
 
   isAuthenticated(): Observable<boolean> {
+    this.checkToken();
+
     return this.isAuthenticatedSubject.asObservable();
   }
 

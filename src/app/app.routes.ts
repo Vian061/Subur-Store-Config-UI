@@ -21,10 +21,11 @@ import { AuthGuard } from "./services/auth-guard";
 import { BpGroupComponent } from "./views/category/bp-group/bp-group.component";
 import { RoleMenuComponent } from "./views/category/role-menu/role-menu.component";
 import { PosConfigurationComponent } from "./views/category/pos-configuration/pos-configuration.component";
+import { NoAuthGuard } from "./services/no-auth-gurad";
 
 export const routes: Routes = [
   { path: "", canActivate: [AuthGuard], component: DashboardComponent },
-  { path: "Login", component: LoginComponent },
+  { path: "Login", canActivate: [NoAuthGuard], component: LoginComponent },
   { path: "Category", canActivate: [AuthGuard], component: CategoryComponent },
   { path: "Area", canActivate: [AuthGuard], component: AreaComponent },
   { path: "Bank", canActivate: [AuthGuard], component: BankComponent },
