@@ -112,13 +112,15 @@ export class AuthService {
               this.isAuthenticatedSubject.next(true);
             },
             error: (error) => {
-              this.logout();
+              this.cookieService.deleteAll();
+              this.isAuthenticatedSubject.next(false);
             },
           });
         }, 100);
       } else {
         this.isAuthenticatedSubject.next(true);
       }
+      this.isAuthenticatedSubject.next(true);
     } else {
       this.isAuthenticatedSubject.next(false);
     }
