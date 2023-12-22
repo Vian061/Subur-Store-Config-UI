@@ -8,6 +8,7 @@ import { CardModule } from "primeng/card";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
+import { BlockUIModule } from "primeng/blockui";
 
 @Component({
   selector: "app-login",
@@ -20,6 +21,7 @@ import { PasswordModule } from "primeng/password";
     FormsModule,
     InputTextModule,
     PasswordModule,
+    BlockUIModule,
   ],
   providers: [MessageService],
   templateUrl: "./login.component.html",
@@ -29,6 +31,7 @@ export class LoginComponent {
   authService: AuthService;
   username: string = "";
   password: string = "";
+  loading: boolean = false;
 
   constructor(authService: AuthService, private messageService: MessageService) {
     this.authService = authService;
@@ -57,9 +60,14 @@ export class LoginComponent {
     });
   }
 
-  login(username: string, password: string) {
-    this.authService.login(username, password).subscribe({
+  login() {
+    this.loading = true;
+    this.authService.login(this.username, this.password).subscribe({
+      next: (res) => {
+        this.loading = false;
+      },
       error: (error) => {
+        this.loading = false;
         this.showError(error);
       },
     });

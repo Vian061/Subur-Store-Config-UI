@@ -115,7 +115,7 @@ export class AuthService {
               this.logout();
             },
           });
-        }, 10000);
+        }, 100);
       } else {
         this.isAuthenticatedSubject.next(true);
       }

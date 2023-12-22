@@ -25,3 +25,19 @@
   display: flex;
   justify-content: center;
 }
+
+.signing-in-container {
+  position: absolute;
+  background: rgba(105, 105, 105, 0.418);
+  width: 100vw;
+  height: 100vh;
+}
+.signing-in {
+  position: absolute;
+  background: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-style: italic;
+  font-weight: lighter;
+}

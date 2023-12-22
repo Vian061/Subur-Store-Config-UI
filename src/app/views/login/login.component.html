@@ -1,5 +1,5 @@
 <div class="login-container">
-  <div class="card d-flex flex-column justify-content-center p-4 shadow-3">
+  <div #pnl class="card d-flex flex-column justify-content-center p-4 shadow-3">
     <h1 style="text-align: center" class="mb-3">Login</h1>
     <div class="d-flex flex-column">
       <div class="d-flex flex-column mb-3">
@@ -10,7 +10,7 @@
           id="username"
           aria-describedby="username-help"
           [(ngModel)]="username"
-          (keyup.enter)="login(this.username, this.password)"
+          (keyup.enter)="login()"
           [autofocus]="true" />
       </div>
       <div class="d-flex flex-column mb-3">
@@ -22,14 +22,18 @@
           id="password"
           aria-describedby="password-help"
           [(ngModel)]="password"
-          (keyup.enter)="login(this.username, this.password)"
+          (keyup.enter)="login()"
           [feedback]="false" />
       </div>
 
       <p-toast></p-toast>
-      <button pButton pRipple class="button" (click)="login(this.username, this.password)">
-        Submit
-      </button>
+      <button type="button" class="button" pButton pRipple (click)="login()">Submit</button>
+    </div>
+  </div>
+
+  <div class="signing-in-container" *ngIf="loading">
+    <div class="signing-in border-round p-4 shadow-2">
+      Please wait while Signing In.........<br />
     </div>
   </div>
 </div>
