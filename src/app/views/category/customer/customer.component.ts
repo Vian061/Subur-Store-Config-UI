@@ -172,6 +172,7 @@ export class CustomerComponent {
       message: message,
       accept: () => {
         this.loading = true;
+        this.buttonDisabled = true;
         this.submit();
       },
       reject: () => {

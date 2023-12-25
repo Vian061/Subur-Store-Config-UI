@@ -114,6 +114,7 @@ export class AuthService {
             error: (error) => {
               this.cookieService.deleteAll();
               this.isAuthenticatedSubject.next(false);
+              this.router.navigate(["/Login"]);
             },
           });
         }, 100);
