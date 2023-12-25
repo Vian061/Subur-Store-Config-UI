@@ -28,8 +28,8 @@
               "src/styles.scss",
               "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeflex/themes/primeone-light.css",
-              "node_modules/primeflex/primeflex.css"
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/primeflex/themes/primeone-light.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",
