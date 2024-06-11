@@ -46,7 +46,8 @@
       'menuOrder',
       'isActive',
       'formName',
-      'formCaption'
+      'formCaption',
+      'parentMenuModel.description'
     ]"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [rowsPerPageOptions]="[10, 20, 30, 50, 80, 100]">
@@ -71,6 +72,7 @@
         </th>
         <th>Code</th>
         <th>Description</th>
+        <th>Parent</th>
         <th>Menu Order</th>
         <th>Active</th>
         <th>Form Name</th>
@@ -84,6 +86,7 @@
         </td>
         <td>{{ menu.code }}</td>
         <td>{{ menu.description }}</td>
+        <td>{{ menu.parentMenuModel?.description }}</td>
         <td>{{ menu.menuOrder }}</td>
         <td>{{ menu.isActive }}</td>
         <td>{{ menu.formName }}</td>

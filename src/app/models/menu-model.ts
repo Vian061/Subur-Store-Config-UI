@@ -7,5 +7,6 @@ export interface MenuModel {
   isActive: boolean;
   formName: string;
   formCaption: string;
+  parentMenu: MenuModel;
   branch: BranchModel;
 }

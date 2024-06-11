@@ -4,7 +4,7 @@ import { BusinessPartnerGroupModel } from "./business-partner-group-model";
 
 export interface BusinessPartnerModel {
   code: string;
-  name: string;
+  customerName: string;
   balance: number;
   pointReward: number;
   pic: string;

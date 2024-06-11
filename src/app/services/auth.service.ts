@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { jwtDecode } from "jwt-decode";
 import { BehaviorSubject } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
+import { environment } from "../../environments/environment";
 
 @Injectable({
   providedIn: "root",
@@ -60,12 +61,11 @@ export class AuthService {
       "&password=" +
       password +
       "&scope=" +
-      Constants.is4Client.scope;
+      encodeURIComponent(environment.scope);
 
     const headers = new HttpHeaders({
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization:
-        "Basic " + btoa(Constants.is4Client.client_id + ":" + Constants.is4Client.client_secret),
+      Authorization: "Basic " + btoa(environment.clientId + ":" + environment.clientSecret),
     });
 
     return this.http.post<any>(Constants.UrlEndpoint.passwordTokenRequestEndpoint, body, {
@@ -76,15 +76,11 @@ export class AuthService {
   refreshToken(): Observable<any> {
     const refreshToken = this.getRefreshToken();
     const body =
-      "grant_type=refresh_token&refresh_token=" +
-      refreshToken +
-      "&scope=" +
-      Constants.is4Client.scope;
+      "grant_type=refresh_token&refresh_token=" + refreshToken + "&scope=" + environment.scope;
 
     const headers = new HttpHeaders({
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization:
-        "Basic " + btoa(Constants.is4Client.client_id + ":" + Constants.is4Client.client_secret),
+      Authorization: "Basic " + btoa(environment.clientId + ":" + environment.clientSecret),
     });
 
     return this.http.post<any>(Constants.UrlEndpoint.passwordTokenRequestEndpoint, body, {

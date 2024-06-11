@@ -1,3 +1,4 @@
+import { environment } from "../environments/environment";
 import { UICategoryMenu } from "./models/ui-models/ui-category-menu";
 
 export class Constants {
@@ -112,10 +113,10 @@ export class Constants {
     },
   ];
   static UrlEndpoint: any = class {
-    static identityServerEndpoint: string = "http://192.168.1.15:44310/";
-    static passwordTokenRequestEndpoint: string = this.identityServerEndpoint + "connect/token";
-    // static apiEndpoint: string = "http://localhost:5084/";
-    static apiEndpoint: string = "http://192.168.1.15:44350/";
+    static identityServerEndpoint: string = environment.is4Url;
+    static passwordTokenRequestEndpoint: string =
+      this.identityServerEndpoint + environment.is4TokenEndpoint;
+    static apiEndpoint: string = environment.apiUrl;
     static apiV1: string = this.apiEndpoint + "api/v1/";
     static apiV2: string = this.apiEndpoint + "api/v2/";
 
@@ -137,11 +138,5 @@ export class Constants {
     static uomGroupEndpoint: string = this.apiV1 + "UoMGroups";
     static warehouseEndpoint: string = this.apiV1 + "Warehouses";
     static warehouseBinEndpoint: string = this.apiV1 + "WarehouseBins";
-  };
-
-  static is4Client: any = class {
-    static client_id = "SuburStoreConfiguration-Web";
-    static client_secret = "SuburStoreConfiguration-Web";
-    static scope = "profile roles openid offline_access SuburStoreConfiguration-ApiScope";
   };
 }
